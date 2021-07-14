@@ -1,0 +1,6 @@
+package cz.vvveb.tycka
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
