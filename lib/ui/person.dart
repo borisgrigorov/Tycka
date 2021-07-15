@@ -36,6 +36,8 @@ class _PersonOverviewState extends State<PersonOverview> {
             itemBuilder: (context, index) => ListTile(
                 title: Text(person.certificates[index].id),
                 leading: TyckaUI.certificateIcon(context),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
                           QRCode(certificate: person.certificates[index]),

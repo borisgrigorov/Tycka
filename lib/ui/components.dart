@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 abstract class TyckaUI {
+  static final Color primaryColor = Colors.blue.shade800;
+
   static ButtonStyle _buttonStyle(BuildContext context) {
     return ElevatedButton.styleFrom(
         elevation: 4.0,
@@ -64,6 +66,23 @@ abstract class TyckaUI {
         Icons.description,
         color: Colors.white,
       ),
+    );
+  }
+
+  static Widget listTileBackground(BuildContext context,
+      {required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3))
+          ]),
+      child: child,
     );
   }
 }

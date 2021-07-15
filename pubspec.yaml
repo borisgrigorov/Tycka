@@ -31,6 +31,9 @@ dependencies:
   qr_flutter: ^4.0.0
   url_launcher: ^6.0.9
   receive_sharing_intent: ^1.4.5
+  dart_base45: ^1.0.1
+  cbor: ^4.0.2
+  google_fonts: ^2.1.0
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
