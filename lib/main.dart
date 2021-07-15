@@ -51,8 +51,8 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                 colors: [
-                  Colors.blue.shade800,
-                  Color(0xFF3983D6),
+                  TyckaUI.primaryColor,
+                  TyckaUI.secondaryColor,
                 ],
                 begin: FractionalOffset(0, 0),
               )),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class TyckaUI {
   static final Color primaryColor = Colors.blue.shade800;
+  static final Color secondaryColor = Color(0xFF3983D6);
 
   static ButtonStyle _buttonStyle(BuildContext context) {
     return ElevatedButton.styleFrom(
