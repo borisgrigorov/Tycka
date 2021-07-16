@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:tycka/main.dart';
@@ -21,6 +22,31 @@ class _RootState extends State<Root> {
   }
 
   void load() async {
+    bool internet = false;
+    while (!internet) {
+      var connectivityCheck = await (Connectivity().checkConnectivity());
+      if (connectivityCheck == ConnectivityResult.none) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Bez připojení k internetu"),
+                  content: Text(
+                      "Pro pokračování musíte být k připojeni k internetu."),
+                  actions: [
+                    TextButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await Future.delayed(Duration(seconds: 1));
+                          load();
+                        },
+                        child: Text("Zkusit znovu"))
+                  ],
+                ));
+        return;
+      } else {
+        internet = true;
+      }
+    }
     await tyckaData.getLoginStatus();
     if (tyckaData.isLoggedIn == true) {
       await tyckaData.getPersons();
