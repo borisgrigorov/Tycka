@@ -8,7 +8,7 @@
     </intent>
   </queries>
    <application
-        android:label="tycka"
+        android:label="Tyčka"
         android:icon="@mipmap/ic_launcher">
         <activity
         android:name=".MainActivity"
