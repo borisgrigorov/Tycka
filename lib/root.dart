@@ -70,6 +70,7 @@ class _RootState extends State<Root> {
 
   void logoutCallback() async {
     await tyckaData.logOut();
+    tyckaData.persons = [];
     setState(() {
       status = IsLoggedIn.LOGGED_OUT;
     });

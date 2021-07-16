@@ -14,7 +14,6 @@ class TyckaData {
   bool? isLoggedIn;
   String? deviceId;
   List<Person> persons = <Person>[];
-  var certificates;
 
   Future<String> getJwt(String deviceName, String installationID) async {
     var response = await http.post(
