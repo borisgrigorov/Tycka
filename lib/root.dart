@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/login.dart';
+import 'package:tycka/ui/tyckaDialog.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }
 
@@ -50,9 +51,19 @@ class _RootState extends State<Root> {
     await tyckaData.getLoginStatus();
     if (tyckaData.isLoggedIn == true) {
       await tyckaData.getPersons();
-      setState(() {
-        status = IsLoggedIn.LOGGED_IN;
-      });
+      if (tyckaData.persons.length == 0) {
+        await TyckaDialog.show(context, "Aplikace byla deautorizována.",
+            "Pro zobrazení certfikátů je nutné se znovu přihlásit.");
+        await tyckaData.logOut();
+        tyckaData.persons = [];
+        setState(() {
+          status = IsLoggedIn.LOGGED_OUT;
+        });
+      } else {
+        setState(() {
+          status = IsLoggedIn.LOGGED_IN;
+        });
+      }
     } else {
       setState(() {
         status = IsLoggedIn.LOGGED_OUT;
