@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:tycka/data/consts.dart';
 import 'package:tycka/ui/components.dart';
+import 'package:tycka/ui/tyckaDialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tycka/main.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as customTabs;
 
 class Login extends StatefulWidget {
   const Login({Key? key, required this.loginCallback}) : super(key: key);
@@ -88,6 +91,23 @@ class _LoginState extends State<Login> {
       _isLoading = true;
     });
     String loginUrl = await tyckaData.registerNewDevice(provider);
-    launch(loginUrl);
+    try {
+      customTabs.launch(loginUrl,
+          customTabsOption: customTabs.CustomTabsOption(
+            animation: customTabs.CustomTabsSystemAnimation.slideIn(),
+            toolbarColor: Theme.of(context).primaryColor,
+            enableDefaultShare: true,
+            enableUrlBarHiding: true,
+            showPageTitle: true,
+          ));
+    } catch (e) {
+      try {
+        launch(loginUrl);
+      } catch (e) {
+        Clipboard.setData(ClipboardData(text: loginUrl));
+        await TyckaDialog.show(context, "Nepovedlo se otevřít přihlášení.",
+            "Odkaz byl zkopírován do schránky, prosím, otevřete jej v prohlížeči,");
+      }
+    }
   }
 }
