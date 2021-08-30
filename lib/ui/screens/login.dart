@@ -61,6 +61,13 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    "assets/icon/icon.png",
+                    height: 150.0,
+                  ),
+                  SizedBox(
+                    height: 50.0,
+                  ),
                   Text(
                     "Vítejte v aplikaci Tyčka!",
                     style: TextStyle(fontSize: 28.0),
