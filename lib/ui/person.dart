@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tycka/models/person.dart';
 import 'package:tycka/ui/components.dart';
-import 'package:tycka/ui/qr.dart';
+import 'package:tycka/ui/screens/qr.dart';
+import 'package:tycka/utils/themeUtils.dart';
 
 class PersonOverview extends StatefulWidget {
   const PersonOverview({Key? key, required this.person}) : super(key: key);
@@ -29,6 +30,7 @@ class _PersonOverviewState extends State<PersonOverview> {
         brightness: Brightness.dark,
         elevation: 0.0,
       ),
+      backgroundColor: ThemeUtils.backgroundColor(context),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ListView.builder(

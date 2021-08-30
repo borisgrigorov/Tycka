@@ -1,3 +1,4 @@
+import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tycka/data/data.dart';
@@ -5,6 +6,9 @@ import 'package:tycka/models/person.dart';
 import 'package:tycka/root.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/ui/person.dart';
+import 'package:tycka/ui/screens/settings.dart';
+import 'package:tycka/ui/themes.dart';
+import 'package:tycka/utils/themeUtils.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,16 +19,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Tyčka",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: TyckaUI.primaryColor,
-        accentColor: TyckaUI.primaryColor,
-        fontFamily: GoogleFonts.openSans().fontFamily,
-      ),
-      home: Root(),
-    );
+    return DynamicTheme(
+        themeCollection: themeCollection,
+        defaultThemeId: 0,
+        builder: (context, theme) {
+          return MaterialApp(
+            title: "Tyčka",
+            debugShowCheckedModeBanner: false,
+            theme: theme,
+            home: Root(),
+          );
+        });
   }
 }
 
@@ -77,9 +82,15 @@ class _HomeState extends State<Home> {
                             child: Material(
                               color: Colors.transparent,
                               child: IconButton(
-                                  onPressed: () => widget.logout(),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => Settings(
+                                                  logout: widget.logout,
+                                                )));
+                                  },
                                   icon: Icon(
-                                    Icons.logout,
+                                    Icons.menu_rounded,
                                     color: Colors.white,
                                   )),
                             ),
@@ -100,6 +111,8 @@ class _HomeState extends State<Home> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: ListTile(
+                                  tileColor:
+                                      ThemeUtils.backgroundColor(context),
                                   leading: TyckaUI.userAvatar(context),
                                   shape: RoundedRectangleBorder(
                                       borderRadius:

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tycka/utils/themeUtils.dart';
 
 abstract class TyckaUI {
   static final Color primaryColor = Colors.blue.shade800;
   static final Color secondaryColor = Color(0xFF3983D6);
+  static final Color backgroundColor = Colors.black;
 
   static ButtonStyle _buttonStyle(BuildContext context) {
     return ElevatedButton.styleFrom(
@@ -54,7 +56,7 @@ abstract class TyckaUI {
     return CircleAvatar(
       backgroundColor: Theme.of(context).primaryColor,
       child: Icon(
-        Icons.person,
+        Icons.person_rounded,
         color: Colors.white,
       ),
     );
@@ -64,7 +66,7 @@ abstract class TyckaUI {
     return CircleAvatar(
       backgroundColor: Theme.of(context).primaryColor,
       child: Icon(
-        Icons.description,
+        Icons.qr_code_rounded,
         color: Colors.white,
       ),
     );
@@ -78,7 +80,9 @@ abstract class TyckaUI {
           borderRadius: BorderRadius.circular(15.0),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: ThemeUtils.isDark(context)
+                    ? Colors.black.withOpacity(0.5)
+                    : Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: Offset(0, 3))

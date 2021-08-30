@@ -6,6 +6,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:tycka/data/consts.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
+import 'package:tycka/utils/themeUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tycka/main.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as customTabs;
@@ -51,6 +52,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeUtils.backgroundColor(context),
       body: Stack(
         children: [
           Padding(

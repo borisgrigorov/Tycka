@@ -2,7 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:tycka/main.dart';
-import 'package:tycka/ui/login.dart';
+import 'package:tycka/ui/screens/login.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }
