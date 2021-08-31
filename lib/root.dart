@@ -88,6 +88,7 @@ class _RootState extends State<Root> {
 
   void logoutCallback() async {
     await tyckaData.logOut();
+    await TyckaPreferences.resetLanguage();
     tyckaData.persons = [];
     setState(() {
       status = IsLoggedIn.LOGGED_OUT;

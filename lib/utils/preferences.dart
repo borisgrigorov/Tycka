@@ -12,4 +12,10 @@ abstract class TyckaPreferences {
     await prefs.setString(TyckaConsts.LANGUAGE_KEY, lang);
     return;
   }
+
+  static Future resetLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(TyckaConsts.LANGUAGE_KEY);
+    return;
+  }
 }
