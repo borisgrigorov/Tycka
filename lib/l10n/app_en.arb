@@ -15,5 +15,10 @@
     "tryAgain": "Try again",
     "appWasDeauthorized": "App was deauthorized.",
     "isNeededToLoginAgain": "To show certificates, you have to login again.",
-    "language": "Language"
+    "language": "Language",
+    "reallyLogout": "Do you really want to logout?",
+    "cancel": "Cancel",
+    "useBiometric": "Fingerprint",
+    "fingerprintToContinue": "Please authenticate to continue to Tyčka",
+    "authFailed":"Authentication failed"
 }

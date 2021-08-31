@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
-import 'package:tycka/utils/preferences.dart';
+import 'package:tycka/utils/localAuth.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -50,6 +50,7 @@ class _SettingsState extends State<Settings> {
                 leading: Icon(Icons.bedtime_rounded),
                 onTap: () => _setDarkTheme(context),
               ),
+              appLock(),
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
@@ -63,8 +64,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(AppLocalizations.of(context)!.logout),
                 leading: Icon(Icons.logout_rounded),
                 onTap: () {
-                  widget.logout();
-                  Navigator.of(context).pop();
+                  logOut();
                 },
               ),
             ],
@@ -78,7 +78,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void setLanguage(String locale) async {
-    await TyckaPreferences.setLanguge(locale);
+    await tyckaData.preferences.setLanguge(locale);
     MyApp.of(context)!.setLocale(Locale(locale));
   }
 
@@ -103,5 +103,59 @@ class _SettingsState extends State<Settings> {
                 ],
               ),
             ));
+  }
+
+  void logOut() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(AppLocalizations.of(context)!.reallyLogout),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      widget.logout();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context)!.logout)),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context)!.cancel))
+              ],
+            ));
+  }
+
+  Widget appLock() {
+    if (tyckaData.auth.isAvailable) {
+      return ListTile(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        title: Text(AppLocalizations.of(context)!.useBiometric),
+        leading: Icon(Icons.fingerprint_rounded),
+        trailing: Switch(
+          value: tyckaData.preferences.useBiometric!,
+          activeColor: Theme.of(context).accentColor,
+          onChanged: (value) => setAppLock(value),
+        ),
+        onTap: () => setAppLock(!tyckaData.preferences.useBiometric!),
+      );
+    } else {
+      return SizedBox(
+        height: 0.0,
+      );
+    }
+  }
+
+  Future setAppLock(bool enabled) async {
+    if (enabled == true) {
+      bool auth = await tyckaData.auth.authenticate(context);
+      if (!auth) {
+        return;
+      }
+    }
+    await tyckaData.preferences.setBiometric(enabled);
+    setState(() {});
   }
 }
