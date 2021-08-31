@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +13,7 @@ class TyckaData {
   bool? isLoggedIn;
   String? deviceId;
   List<Person> persons = <Person>[];
+  String? language;
 
   Future<String> getJwt(String deviceName, String installationID) async {
     var response = await http.post(

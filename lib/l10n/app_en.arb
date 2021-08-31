@@ -6,7 +6,7 @@
     "linkWasCopiedOpenInBrowser": "Link was copied to clipboard, please open it in browser.",
     "perons": "Persons",
     "add": "Add",
-    "qrCOde": "QR Code",
+    "qrCode": "QR Code",
     "settings": "Settings",
     "darkTheme": "Dark theme",
     "logout": "Logout",
@@ -14,5 +14,6 @@
     "internetNeeded": "Internet is needed to continue.",
     "tryAgain": "Try again",
     "appWasDeauthorized": "App was deauthorized.",
-    "isNeededToLoginAgain": "To show certificates, you have to login again."
+    "isNeededToLoginAgain": "To show certificates, you have to login again.",
+    "language": "Language"
 }

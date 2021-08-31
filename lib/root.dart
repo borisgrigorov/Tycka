@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/login.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
+import 'package:tycka/utils/preferences.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }
 
@@ -24,6 +25,10 @@ class _RootState extends State<Root> {
 
   void load() async {
     bool internet = false;
+    tyckaData.language = await TyckaPreferences.getLanguage();
+    if (tyckaData.language != null) {
+      MyApp.of(context)!.setLocale(Locale(tyckaData.language!));
+    }
     while (!internet) {
       var connectivityCheck = await (Connectivity().checkConnectivity());
       if (connectivityCheck == ConnectivityResult.none) {

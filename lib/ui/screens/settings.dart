@@ -1,7 +1,9 @@
 import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
+import 'package:tycka/utils/preferences.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -51,6 +53,13 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
+                title: Text(AppLocalizations.of(context)!.language),
+                leading: Icon(Icons.language),
+                onTap: () => showLanguagesDialog(),
+              ),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
                 title: Text(AppLocalizations.of(context)!.logout),
                 leading: Icon(Icons.logout_rounded),
                 onTap: () {
@@ -66,5 +75,33 @@ class _SettingsState extends State<Settings> {
   void _setDarkTheme(BuildContext context) {
     DynamicTheme.of(context)?.setTheme(
         ThemeUtils.isDark(context) ? AppThemes.Light : AppThemes.Dark);
+  }
+
+  void setLanguage(String locale) async {
+    await TyckaPreferences.setLanguge(locale);
+    MyApp.of(context)!.setLocale(Locale(locale));
+  }
+
+  void showLanguagesDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(AppLocalizations.of(context)!.language),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      title: Text("Czech"),
+                      onTap: () => setLanguage("cs")),
+                  ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      title: Text("English"),
+                      onTap: () => setLanguage("en")),
+                ],
+              ),
+            ));
   }
 }

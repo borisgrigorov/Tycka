@@ -5,6 +5,7 @@ abstract class TyckaConsts {
   static const String AUTH_ENDPOINT = "auth/login";
   static const String PERSON_ENDPOINT = "person";
   static const String SECURE_STORAGE_KEY = "installationId";
+  static const String LANGUAGE_KEY = "language";
 }
 
 enum TyckaLoginTypes { NIA, SMS }

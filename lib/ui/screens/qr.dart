@@ -3,6 +3,7 @@ import 'package:tycka/models/certificate.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/utils/themeUtils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QRCode extends StatefulWidget {
   const QRCode({Key? key, required this.certificate}) : super(key: key);
@@ -17,7 +18,7 @@ class _QRCodeState extends State<QRCode> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("QR Code"),
+          title: Text(AppLocalizations.of(context)!.qrCode),
           iconTheme: IconThemeData(color: Colors.white),
           brightness: Brightness.dark,
           elevation: 0.0,

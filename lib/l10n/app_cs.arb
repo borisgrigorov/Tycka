@@ -6,7 +6,7 @@
     "linkWasCopiedOpenInBrowser": "Odkaz byl zkopírován do schránky, prosím, otevřete jej v prohlížeči.",
     "perons": "Osoby",
     "add": "Přidat",
-    "qrCOde": "QR Kód",
+    "qrCode": "QR Kód",
     "settings": "Nastavení",
     "darkTheme": "Tmavý režim",
     "logout": "Odhlásit se",
@@ -14,5 +14,6 @@
     "internetNeeded": "Pro pokračování musíte být k připojeni k internetu.",
     "tryAgain": "Zkusit znova",
     "appWasDeauthorized": "Aplikace byla deautorizována.",
-    "isNeededToLoginAgain": "Pro zobrazení certfikátů je nutné se znovu přihlásit."
+    "isNeededToLoginAgain": "Pro zobrazení certfikátů je nutné se znovu přihlásit.",
+    "language": "Jazyk"
 }
