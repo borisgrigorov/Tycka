@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/login.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
-import 'package:tycka/utils/preferences.dart';
+import 'package:tycka/utils/localAuth.dart';
 import 'package:tycka/utils/themeUtils.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }
@@ -26,10 +26,13 @@ class _RootState extends State<Root> {
 
   void load() async {
     bool internet = false;
-    tyckaData.language = await TyckaPreferences.getLanguage();
-    if (tyckaData.language != null) {
-      MyApp.of(context)!.setLocale(Locale(tyckaData.language!));
+    await tyckaData.preferences.getLanguage();
+    tyckaData.preferences.useBiometric =
+        await tyckaData.preferences.getBiometicSettings();
+    if (tyckaData.preferences.language != null) {
+      MyApp.of(context)!.setLocale(Locale(tyckaData.preferences.language!));
     }
+    await tyckaData.auth.checkIfAvailable();
     while (!internet) {
       var connectivityCheck = await (Connectivity().checkConnectivity());
       if (connectivityCheck == ConnectivityResult.none) {
@@ -88,16 +91,25 @@ class _RootState extends State<Root> {
 
   void logoutCallback() async {
     await tyckaData.logOut();
-    await TyckaPreferences.resetLanguage();
+    tyckaData.preferences.language = null;
+    tyckaData.preferences.useBiometric = false;
+    await tyckaData.preferences.resetLanguage();
+    await tyckaData.preferences.setBiometric(false);
     tyckaData.persons = [];
     setState(() {
       status = IsLoggedIn.LOGGED_OUT;
     });
   }
 
+  bool? auth;
+
   @override
   Widget build(BuildContext context) {
-    if (status == IsLoggedIn.LOGGED_IN) {
+    if (tyckaData.preferences.useBiometric == false) {
+      auth = true;
+    }
+    if (auth == null && tyckaData.preferences.useBiometric == true) authorize();
+    if (status == IsLoggedIn.LOGGED_IN && auth == true) {
       return Home(
         logout: this.logoutCallback,
       );
@@ -115,5 +127,16 @@ class _RootState extends State<Root> {
         ),
       );
     }
+  }
+
+  void authorize() async {
+    auth = false;
+    while (auth == false) {
+      auth = await tyckaData.auth.authenticate(context);
+      if (auth == false) {
+        await Future.delayed(Duration(seconds: 1));
+      }
+    }
+    setState(() {});
   }
 }

@@ -17,5 +17,8 @@
     "isNeededToLoginAgain": "Pro zobrazení certfikátů je nutné se znovu přihlásit.",
     "language": "Jazyk",
     "reallyLogout": "Opravdu se chcete odhlásit?",
-    "cancel": "Zrušit"
+    "cancel": "Zrušit",
+    "useBiometric": "Otisk prstu",
+    "fingerprintToContinue": "Ověřte svoji totožnost pro pokračování do aplikace Tyčka",
+    "authFailed": "Autentifikace"
 }

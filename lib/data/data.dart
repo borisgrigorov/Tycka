@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:tycka/data/consts.dart';
 import 'package:tycka/models/certificate.dart';
 import 'package:tycka/models/person.dart';
+import 'package:tycka/utils/localAuth.dart';
+import 'package:tycka/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class TyckaData {
@@ -13,7 +15,8 @@ class TyckaData {
   bool? isLoggedIn;
   String? deviceId;
   List<Person> persons = <Person>[];
-  String? language;
+  TyckaLocalAuth auth = TyckaLocalAuth();
+  TyckaPreferences preferences = TyckaPreferences();
 
   Future<String> getJwt(String deviceName, String installationID) async {
     var response = await http.post(
