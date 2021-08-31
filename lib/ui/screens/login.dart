@@ -10,6 +10,7 @@ import 'package:tycka/utils/themeUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tycka/main.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as customTabs;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key, required this.loginCallback}) : super(key: key);
@@ -69,13 +70,13 @@ class _LoginState extends State<Login> {
                     height: 50.0,
                   ),
                   Text(
-                    "Vítejte v aplikaci Tyčka!",
+                    AppLocalizations.of(context)!.welcomeInTycka,
                     style: TextStyle(fontSize: 28.0),
                   ),
                   SizedBox(
                     height: 50.0,
                   ),
-                  Text("Zvolte metodu přihlášení"),
+                  Text(AppLocalizations.of(context)!.chooseLoginType),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -84,7 +85,7 @@ class _LoginState extends State<Login> {
                       text: "eIdentita"),
                   TyckaUI.button(context,
                       onPressed: () => login(TyckaLoginTypes.SMS),
-                      text: "Jednorázový SMS kód"),
+                      text: AppLocalizations.of(context)!.oneTimeSMS),
                 ],
               ),
             ),
@@ -114,8 +115,10 @@ class _LoginState extends State<Login> {
         launch(loginUrl);
       } catch (e) {
         Clipboard.setData(ClipboardData(text: loginUrl));
-        await TyckaDialog.show(context, "Nepovedlo se otevřít přihlášení.",
-            "Odkaz byl zkopírován do schránky, prosím, otevřete jej v prohlížeči,");
+        await TyckaDialog.show(
+            context,
+            AppLocalizations.of(context)!.openBrowserFailed,
+            AppLocalizations.of(context)!.linkWasCopiedOpenInBrowser);
       }
     }
   }

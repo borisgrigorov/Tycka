@@ -1,0 +1,18 @@
+{
+    "welcomeInTycka": "Welcome to the app Tyčka!",
+    "chooseLoginType": "Choose login method",
+    "oneTimeSMS": "One time SMS code",
+    "openBrowserFailed": "Open login failed.",
+    "linkWasCopiedOpenInBrowser": "Link was copied to clipboard, please open it in browser.",
+    "perons": "Persons",
+    "add": "Add",
+    "qrCOde": "QR Code",
+    "settings": "Settings",
+    "darkTheme": "Dark theme",
+    "logout": "Logout",
+    "noInternet": "No internet connection",
+    "internetNeeded": "Internet is needed to continue.",
+    "tryAgain": "Try again",
+    "appWasDeauthorized": "App was deauthorized.",
+    "isNeededToLoginAgain": "To show certificates, you have to login again."
+}

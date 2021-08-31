@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/login.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
@@ -30,9 +30,8 @@ class _RootState extends State<Root> {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                  title: Text("Bez připojení k internetu"),
-                  content: Text(
-                      "Pro pokračování musíte být k připojeni k internetu."),
+                  title: Text(AppLocalizations.of(context)!.noInternet),
+                  content: Text(AppLocalizations.of(context)!.internetNeeded),
                   actions: [
                     TextButton(
                         onPressed: () async {
@@ -40,7 +39,7 @@ class _RootState extends State<Root> {
                           await Future.delayed(Duration(seconds: 1));
                           load();
                         },
-                        child: Text("Zkusit znovu"))
+                        child: Text(""))
                   ],
                 ));
         return;
@@ -52,8 +51,10 @@ class _RootState extends State<Root> {
     if (tyckaData.isLoggedIn == true) {
       await tyckaData.getPersons();
       if (tyckaData.persons.length == 0) {
-        await TyckaDialog.show(context, "Aplikace byla deautorizována.",
-            "Pro zobrazení certfikátů je nutné se znovu přihlásit.");
+        await TyckaDialog.show(
+            context,
+            AppLocalizations.of(context)!.appWasDeauthorized,
+            AppLocalizations.of(context)!.isNeededToLoginAgain);
         await tyckaData.logOut();
         tyckaData.persons = [];
         setState(() {

@@ -1,5 +1,6 @@
 import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tycka/data/data.dart';
 import 'package:tycka/models/person.dart';
@@ -9,6 +10,7 @@ import 'package:tycka/ui/person.dart';
 import 'package:tycka/ui/screens/settings.dart';
 import 'package:tycka/ui/themes.dart';
 import 'package:tycka/utils/themeUtils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,6 +30,13 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: theme,
             home: Root(),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale("en", ""), Locale("cs", "")],
           );
         });
   }

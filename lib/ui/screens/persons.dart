@@ -7,6 +7,7 @@ import 'package:tycka/ui/tyckaDialog.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as customTabs;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonsSettings extends StatefulWidget {
   const PersonsSettings({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _PersonSettingsState extends State<PersonsSettings> {
   Widget body() {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Osoby"),
+        title: Text(AppLocalizations.of(context)!.perons),
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
         elevation: 0.0,
@@ -41,7 +42,7 @@ class _PersonSettingsState extends State<PersonsSettings> {
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
-                title: Text("Přidat"),
+                title: Text(AppLocalizations.of(context)!.add),
                 leading: Icon(Icons.add_rounded),
                 onTap: () {
                   showModalBottomSheet(
@@ -54,7 +55,8 @@ class _PersonSettingsState extends State<PersonsSettings> {
                               child: Column(
                                 children: [
                                   Text(
-                                    "Vyberte typ přihlášení",
+                                    AppLocalizations.of(context)!
+                                        .chooseLoginType,
                                     style: TextStyle(fontSize: 16.0),
                                   ),
                                   Padding(
@@ -68,7 +70,8 @@ class _PersonSettingsState extends State<PersonsSettings> {
                                   TyckaUI.button(context,
                                       onPressed: () =>
                                           login(TyckaLoginTypes.SMS),
-                                      text: "Jednorázový SMS kód"),
+                                      text: AppLocalizations.of(context)!
+                                          .oneTimeSMS),
                                 ],
                               ),
                             ),
@@ -116,8 +119,10 @@ class _PersonSettingsState extends State<PersonsSettings> {
         launch(loginUrl);
       } catch (e) {
         Clipboard.setData(ClipboardData(text: loginUrl));
-        await TyckaDialog.show(context, "Nepovedlo se otevřít přihlášení.",
-            "Odkaz byl zkopírován do schránky, prosím, otevřete jej v prohlížeči,");
+        await TyckaDialog.show(
+            context,
+            AppLocalizations.of(context)!.openBrowserFailed,
+            AppLocalizations.of(context)!.linkWasCopiedOpenInBrowser);
       }
     }
   }

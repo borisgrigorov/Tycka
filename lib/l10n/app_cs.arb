@@ -1,0 +1,18 @@
+{
+    "welcomeInTycka": "Vítejte v aplikaci Tyčka!",
+    "chooseLoginType": "Zvolte metodu přihlášení",
+    "oneTimeSMS": "Jednorázový SMS kód",
+    "openBrowserFailed": "Nepovedlo se otevřít přihlášení.",
+    "linkWasCopiedOpenInBrowser": "Odkaz byl zkopírován do schránky, prosím, otevřete jej v prohlížeči.",
+    "perons": "Osoby",
+    "add": "Přidat",
+    "qrCOde": "QR Kód",
+    "settings": "Nastavení",
+    "darkTheme": "Tmavý režim",
+    "logout": "Odhlásit se",
+    "noInternet": "Bez připojení k internetu",
+    "internetNeeded": "Pro pokračování musíte být k připojeni k internetu.",
+    "tryAgain": "Zkusit znova",
+    "appWasDeauthorized": "Aplikace byla deautorizována.",
+    "isNeededToLoginAgain": "Pro zobrazení certfikátů je nutné se znovu přihlásit."
+}

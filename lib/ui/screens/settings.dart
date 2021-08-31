@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
 import 'package:tycka/utils/themeUtils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.logout}) : super(key: key);
@@ -17,7 +18,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Nastavení"),
+        title: Text(AppLocalizations.of(context)!.settings),
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
         elevation: 0.0,
@@ -30,7 +31,7 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
-                title: Text("Osoby"),
+                title: Text(AppLocalizations.of(context)!.perons),
                 leading: Icon(Icons.person_rounded),
                 onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => PersonsSettings())),
@@ -38,7 +39,7 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
-                title: Text("Tmavý režim"),
+                title: Text(AppLocalizations.of(context)!.darkTheme),
                 trailing: Switch(
                   activeColor: Theme.of(context).accentColor,
                   value: Theme.of(context).brightness == Brightness.dark,
@@ -50,7 +51,7 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
-                title: Text("Odhlásit se"),
+                title: Text(AppLocalizations.of(context)!.logout),
                 leading: Icon(Icons.logout_rounded),
                 onTap: () {
                   widget.logout();
