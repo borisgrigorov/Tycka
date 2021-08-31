@@ -5,6 +5,7 @@ import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/login.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
 import 'package:tycka/utils/preferences.dart';
+import 'package:tycka/utils/themeUtils.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }
 
@@ -105,10 +106,10 @@ class _RootState extends State<Root> {
       );
     } else {
       return Scaffold(
+        backgroundColor: ThemeUtils.backgroundColor(context),
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          color: Colors.white.withOpacity(0.8),
           child: Center(child: CircularProgressIndicator(strokeWidth: 2.0)),
         ),
       );
