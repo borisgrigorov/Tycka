@@ -45,7 +45,7 @@ class _RootState extends State<Root> {
                           await Future.delayed(Duration(seconds: 1));
                           load();
                         },
-                        child: Text(""))
+                        child: Text(AppLocalizations.of(context)!.tryAgain))
                   ],
                 ));
         return;

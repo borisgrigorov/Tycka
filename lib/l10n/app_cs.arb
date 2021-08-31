@@ -15,5 +15,7 @@
     "tryAgain": "Zkusit znova",
     "appWasDeauthorized": "Aplikace byla deautorizována.",
     "isNeededToLoginAgain": "Pro zobrazení certfikátů je nutné se znovu přihlásit.",
-    "language": "Jazyk"
+    "language": "Jazyk",
+    "reallyLogout": "Opravdu se chcete odhlásit?",
+    "cancel": "Zrušit"
 }

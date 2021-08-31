@@ -63,8 +63,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(AppLocalizations.of(context)!.logout),
                 leading: Icon(Icons.logout_rounded),
                 onTap: () {
-                  widget.logout();
-                  Navigator.of(context).pop();
+                  logOut();
                 },
               ),
             ],
@@ -102,6 +101,28 @@ class _SettingsState extends State<Settings> {
                       onTap: () => setLanguage("en")),
                 ],
               ),
+            ));
+  }
+
+  void logOut() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(AppLocalizations.of(context)!.reallyLogout),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      widget.logout();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context)!.logout)),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context)!.cancel))
+              ],
             ));
   }
 }
