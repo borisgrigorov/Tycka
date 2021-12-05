@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tycka/data/decode.dart';
 import 'package:tycka/models/certificate.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tycka/ui/components.dart';
@@ -16,12 +17,18 @@ class QRCode extends StatefulWidget {
 class _QRCodeState extends State<QRCode> {
   @override
   Widget build(BuildContext context) {
+    try {
+      decodeCbor(widget.certificate.qrData);
+    } catch (e) {
+      print(e);
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.qrCode),
           iconTheme: IconThemeData(color: Colors.white),
           brightness: Brightness.dark,
           elevation: 0.0,
+          backgroundColor: TyckaUI.primaryColor,
         ),
         body: Container(
           height: double.infinity,

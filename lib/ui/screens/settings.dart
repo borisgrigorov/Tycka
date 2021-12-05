@@ -1,6 +1,7 @@
 import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:tycka/main.dart';
+import 'package:tycka/ui/components.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
 import 'package:tycka/utils/localAuth.dart';
@@ -24,6 +25,7 @@ class _SettingsState extends State<Settings> {
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
         elevation: 0.0,
+        backgroundColor: TyckaUI.primaryColor,
       ),
       backgroundColor: ThemeUtils.backgroundColor(context),
       body: Padding(
@@ -33,7 +35,7 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
-                title: Text(AppLocalizations.of(context)!.perons),
+                title: Text(AppLocalizations.of(context)!.persons),
                 leading: Icon(Icons.person_rounded),
                 onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => PersonsSettings())),

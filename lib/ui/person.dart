@@ -29,6 +29,7 @@ class _PersonOverviewState extends State<PersonOverview> {
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
         elevation: 0.0,
+        backgroundColor: TyckaUI.primaryColor,
       ),
       backgroundColor: ThemeUtils.backgroundColor(context),
       body: Padding(
