@@ -1,41 +1,26 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_base45/dart_base45.dart';
 import 'package:cbor/cbor.dart';
-import 'package:typed_data/typed_data.dart';
 
 decodeCbor(String data) {
   if (data.substring(0, 4) == "HC1:") {
-    print(data);
-    var decoded = _decodeData(data.substring(4));
+    String b45data = data.substring(4);
+    Uint8List zlibdata = Base45.decode(b45data);
+    var cbordata = zlib.decode(zlibdata);
     Cbor cbortag = Cbor();
-    cbortag.decodeFromList(decoded);
-    print(cbortag.getDecodedData());
-    try {
-      List? cborData = cbortag.getDecodedData();
+    cbortag.decodeFromList(cbordata);
 
-      print("CBOR DATA");
-      print(cborData);
-      print(utf8.decode(cborData as List<int>));
-    } catch (e) {
-      print("ERROR WHILE DECODING CBOR");
-      print(e);
-    }
-    //Map dgc = {"tag": cborData["tag"]};
-    return;
+    List? decoded = cbortag.getDecodedData();
+    Cbor cbortag2 = Cbor();
+    cbortag2.decodeFromBuffer(decoded![0][2]);
+    final decodedData = cbortag2.getDecodedData()![0];
+    //print(decodedData[-260][1]["nam"]["gn"]);
+    return decodedData;
   } else {
     return null;
   }
-}
-
-List<int> _decodeData(String data) {
-  Uint8List bytes = Base45.decode(data);
-  print("Bytes");
-  print(bytes.toString());
-  List<int> decoded = zlib.decode(bytes);
-  print("Zlib decoded");
-  print(decoded);
-  return decoded;
 }

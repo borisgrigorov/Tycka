@@ -29,7 +29,7 @@ class _PersonSettingsState extends State<PersonsSettings> {
   Widget body() {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.perons),
+        title: Text(AppLocalizations.of(context)!.persons),
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
         elevation: 0.0,
