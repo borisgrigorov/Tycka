@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tycka/data/decode.dart';
+import 'package:tycka/consts/tests.dart';
+import 'package:tycka/consts/vacinnes.dart';
+import 'package:tycka/models/certData.dart';
 import 'package:tycka/models/certificate.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tycka/ui/components.dart';
@@ -8,7 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QRCode extends StatefulWidget {
   const QRCode({Key? key, required this.certificate}) : super(key: key);
-  final Certificate certificate;
+  final certificate;
 
   @override
   _QRCodeState createState() => _QRCodeState();
@@ -17,11 +19,6 @@ class QRCode extends StatefulWidget {
 class _QRCodeState extends State<QRCode> {
   @override
   Widget build(BuildContext context) {
-    try {
-      decodeCbor(widget.certificate.qrData);
-    } catch (e) {
-      print(e);
-    }
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.qrCode),
@@ -38,21 +35,182 @@ class _QRCodeState extends State<QRCode> {
               : Theme.of(context).primaryColor,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: QrImage(
-                    data: widget.certificate.qrData,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: QrImage(
+                        data: widget.certificate.qrData,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                TyckaUI.button(context,
+                    onPressed: () => showDetails(), text: "Show details")
+              ],
             ),
           ),
         ));
+  }
+
+  void showDetails() {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        )),
+        //backgroundColor: ThemeUtils.backgroundColor(context),
+        builder: (context) => SafeArea(
+            top: false,
+            child: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    handle(),
+                    infoRow(AppLocalizations.of(context)!.name,
+                        widget.certificate.data.name),
+                    infoRow(AppLocalizations.of(context)!.lastName,
+                        widget.certificate.data.lastName),
+                    infoRow(AppLocalizations.of(context)!.certtype,
+                        widget.certificate.data.getCertificateType(context)),
+                    infoRow(AppLocalizations.of(context)!.birthDate,
+                        widget.certificate.data.birthDate),
+                    ...certSpecificFields(),
+                    infoRow(AppLocalizations.of(context)!.desease, "COVID-19"),
+                    infoRow(AppLocalizations.of(context)!.certIssuer,
+                        widget.certificate.data.certIssuer),
+                    infoRow(AppLocalizations.of(context)!.state,
+                        widget.certificate.data.state),
+                    infoRow(AppLocalizations.of(context)!.certId,
+                        widget.certificate.data.certID),
+                  ],
+                ),
+              ),
+            )));
+  }
+
+  Widget infoRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+      child: Container(
+        width: double.infinity,
+        child: Wrap(
+          direction: Axis.horizontal,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(
+              title + ": ",
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+              textAlign: TextAlign.left,
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                  color:
+                      ThemeUtils.isDark(context) ? Colors.white : Colors.black,
+                  fontSize: 16),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> certSpecificFields() {
+    if (widget.certificate.data.certType == CertType.VAX) {
+      return [
+        infoRow(
+            AppLocalizations.of(context)!.vaccine,
+            predefinedVaccineTypes
+                .where((element) =>
+                    element.code == widget.certificate.data.vaccine)
+                .first
+                .name),
+        infoRow(AppLocalizations.of(context)!.doses,
+            widget.certificate.data.doses.toString()),
+        infoRow(AppLocalizations.of(context)!.totalDoses,
+            widget.certificate.data.totalDoses.toString()),
+        infoRow(
+            AppLocalizations.of(context)!.vaccine,
+            predefinedVaccineProducts
+                .where((element) =>
+                    element.code == widget.certificate.data.vaccineProduct)
+                .first
+                .name),
+        infoRow(
+            AppLocalizations.of(context)!.vaccineManufacture,
+            predefinedVaccineManufacturers
+                .where((element) =>
+                    element.code ==
+                    widget.certificate.data.vaccineManufacturer
+                        .replaceAll("-", ""))
+                .first
+                .name),
+        infoRow(AppLocalizations.of(context)!.totalDoses,
+            widget.certificate.data.vaccinationDate.toString()),
+      ];
+    } else if (widget.certificate.data.certType == CertType.TEST) {
+      return [
+        infoRow(
+            AppLocalizations.of(context)!.testType,
+            predefinedTestTypes
+                .where((element) =>
+                    element.code == widget.certificate.data.testType)
+                .first
+                .name),
+        widget.certificate.data.testName == "null"
+            ? SizedBox(height: 0.0)
+            : infoRow(AppLocalizations.of(context)!.testName,
+                widget.certificate.data.testName),
+        infoRow(AppLocalizations.of(context)!.testDate,
+            widget.certificate.data.date),
+        infoRow(AppLocalizations.of(context)!.testPlace,
+            widget.certificate.data.testingCenter),
+        infoRow(
+            AppLocalizations.of(context)!.result,
+            predefinedTestResults
+                .where(
+                    (element) => element.code == widget.certificate.data.result)
+                .first
+                .name),
+      ];
+    } else if (widget.certificate.data.certType == CertType.RECOVERY) {
+      return [
+        infoRow(AppLocalizations.of(context)!.validFrom,
+            widget.certificate.data.validFrom),
+        infoRow(AppLocalizations.of(context)!.validFrom,
+            widget.certificate.data.validFrom),
+        infoRow(AppLocalizations.of(context)!.firstPositive,
+            widget.certificate.data.firstPositive),
+      ];
+    } else {
+      return [];
+    }
+  }
+
+  Widget handle() {
+    return Container(
+      width: 40,
+      height: 3,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Theme.of(context).primaryColor.withOpacity(0.5),
+      ),
+    );
   }
 }

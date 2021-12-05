@@ -8,21 +8,88 @@ abstract class CertUtils {
     String lastName = data[-260][1]["nam"]["fn"].toString();
     String dob = data[-260][1]["dob"].toString();
     String state = data[1];
+    String certId = data[-260][1][_getKey(certType)][0]["ci"].toString();
+    String certIssuer = data[-260][1][_getKey(certType)][0]["is"].toString();
+    String desease = data[-260][1][_getKey(certType)][0]["tg"].toString();
 
-    String certId = data[-260][1][_getKey(certType)]["ci"].toString();
-    String certIssuer = data[-260][1][_getKey(certType)]["is"].toString();
-    String desease = data[-260][1][_getKey(certType)]["tg"].toString();
-
-    return CertificateData(
-        certType: certType,
-        birthDate: dob,
-        lastName: lastName,
-        name: name,
-        state: state,
-        schemaVersion: schemaVer,
-        certID: certId,
-        certIssuer: certIssuer,
-        desease: desease);
+    if (certType == CertType.VAX) {
+      String vaccine = data[-260][1][_getKey(certType)][0]["vp"].toString();
+      String vaccineProduct =
+          data[-260][1][_getKey(certType)][0]["mp"].toString();
+      String vaccineManufacturer =
+          data[-260][1][_getKey(certType)][0]["ma"].toString();
+      int doses = data[-260][1][_getKey(certType)][0]["dn"];
+      int totalDoses = data[-260][1][_getKey(certType)][0]["sd"];
+      String vaccinationDate =
+          data[-260][1][_getKey(certType)][0]["dt"].toString();
+      return VaccinationCert(
+          doses: doses,
+          totalDoses: totalDoses,
+          vaccine: vaccine,
+          vaccineProduct: vaccineProduct,
+          vaccineManufacturer: vaccineManufacturer,
+          vaccinationDate: vaccinationDate,
+          certType: certType,
+          birthDate: dob,
+          lastName: lastName,
+          name: name,
+          state: state,
+          schemaVersion: schemaVer,
+          certID: certId,
+          certIssuer: certIssuer,
+          desease: desease);
+    } else if (certType == CertType.TEST) {
+      String result = data[-260][1][_getKey(certType)][0]["tr"].toString();
+      String testDate = data[-260][1][_getKey(certType)][0]["sc"].toString();
+      String testType = data[-260][1][_getKey(certType)][0]["tt"].toString();
+      String testName = data[-260][1][_getKey(certType)][0]["nm"].toString();
+      String testingCenter =
+          data[-260][1][_getKey(certType)][0]["tc"].toString();
+      return TestCert(
+          result: result,
+          date: testDate,
+          testType: testType,
+          testName: testName,
+          testingCenter: testingCenter,
+          certType: certType,
+          birthDate: dob,
+          lastName: lastName,
+          name: name,
+          state: state,
+          schemaVersion: schemaVer,
+          certID: certId,
+          certIssuer: certIssuer,
+          desease: desease);
+    } else if (certType == CertType.RECOVERY) {
+      String firstPositive =
+          data[-260][1][_getKey(certType)][0]["fr"].toString();
+      String validFrom = data[-260][1][_getKey(certType)][0]["df"].toString();
+      String validUntil = data[-260][1][_getKey(certType)][0]["du"].toString();
+      return RecoveryCert(
+          validFrom: validFrom,
+          validUntil: validUntil,
+          firtsPositive: firstPositive,
+          certType: certType,
+          birthDate: dob,
+          lastName: lastName,
+          name: name,
+          state: state,
+          schemaVersion: schemaVer,
+          certID: certId,
+          certIssuer: certIssuer,
+          desease: desease);
+    } else {
+      return CertificateData(
+          certType: certType,
+          birthDate: dob,
+          lastName: lastName,
+          name: name,
+          state: state,
+          schemaVersion: schemaVer,
+          certID: certId,
+          certIssuer: certIssuer,
+          desease: desease);
+    }
   }
 
   static _getCertType(Map data) {

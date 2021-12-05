@@ -4,7 +4,6 @@ import 'package:tycka/main.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
-import 'package:tycka/utils/localAuth.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

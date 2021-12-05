@@ -37,7 +37,12 @@ class _PersonOverviewState extends State<PersonOverview> {
         child: ListView.builder(
             itemCount: person.certificates.length,
             itemBuilder: (context, index) => ListTile(
-                title: Text(person.certificates[index].id),
+                title: Text(person.certificates[index].data
+                    .getCertificateType(context)),
+                subtitle: Text(
+                  person.certificates[index].id,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 leading: TyckaUI.certificateIcon(context),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),

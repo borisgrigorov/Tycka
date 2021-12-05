@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 enum CertType { VAX, TEST, RECOVERY, UNKNOWN }
 
 class CertificateData {
@@ -21,6 +24,19 @@ class CertificateData {
       required this.state,
       required this.certIssuer,
       required this.certID});
+
+  String getCertificateType(BuildContext context) {
+    switch (certType) {
+      case CertType.VAX:
+        return AppLocalizations.of(context)!.vaccine;
+      case CertType.TEST:
+        return AppLocalizations.of(context)!.test;
+      case CertType.RECOVERY:
+        return AppLocalizations.of(context)!.recovery;
+      default:
+        return "UNKNOWN";
+    }
+  }
 }
 
 class VaccinationCert extends CertificateData {
@@ -29,7 +45,7 @@ class VaccinationCert extends CertificateData {
   String vaccineManufacturer;
   int doses;
   int totalDoses;
-  DateTime vaccinationDate;
+  String vaccinationDate;
 
   VaccinationCert(
       {required String schemaVersion,
@@ -62,7 +78,7 @@ class VaccinationCert extends CertificateData {
 class TestCert extends CertificateData {
   String testType;
   String testName;
-  DateTime date;
+  String date;
   String result;
   String testingCenter;
 
@@ -94,9 +110,9 @@ class TestCert extends CertificateData {
 }
 
 class RecoveryCert extends CertificateData {
-  DateTime firtsPositive;
-  DateTime validFrom;
-  DateTime validUntil;
+  String firtsPositive;
+  String validFrom;
+  String validUntil;
 
   RecoveryCert({
     required this.firtsPositive,
