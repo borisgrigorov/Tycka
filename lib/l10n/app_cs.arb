@@ -47,6 +47,7 @@
     "firstPositive": "První pozitivní test",
     "aboutApp": "O aplikaci",
     "sourceCode": "Zdrojový kód aplikace",
-    "version": "Verze"
+    "version": "Verze",
+    "showDetails": "Zobrazit detaily"
 
 }

@@ -47,5 +47,6 @@
     "firstPositive": "First positive",
     "aboutApp": "About app",
     "sourceCode": "App source code",
-    "version": "Version"
+    "version": "Version",
+    "showDetails": "Show details"
 }

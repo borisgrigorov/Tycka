@@ -100,7 +100,7 @@ class _QRCodeState extends State<QRCode> {
                           width: double.infinity,
                           child: Center(
                             child: Text(
-                              "Show details",
+                              AppLocalizations.of(context)!.showDetails,
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: TyckaUI.secondaryColor,
