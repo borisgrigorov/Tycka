@@ -4,21 +4,24 @@ import 'package:tycka/utils/themeUtils.dart';
 abstract class TyckaUI {
   static final Color primaryColor = Colors.blue.shade800;
   static final Color secondaryColor = Color(0xFF3983D6);
-  static final Color backgroundColor = Colors.black;
+  //static final Color backgroundColor = Colors.black;
+  static final Color backgroundColor = Color(0xFF0b0d1c);
 
-  static ButtonStyle _buttonStyle(BuildContext context) {
+  static ButtonStyle _buttonStyle(
+      BuildContext context, Color color, double elevation) {
     return ElevatedButton.styleFrom(
-        elevation: 4.0,
+        elevation: elevation,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        primary: Theme.of(context).primaryColor);
+        primary: color);
   }
 
-  static Widget button(
-    BuildContext context, {
-    required void Function() onPressed,
-    required String text,
-  }) {
+  static Widget button(BuildContext context,
+      {required void Function() onPressed,
+      required String text,
+      Color? color,
+      Color? textColor,
+      double elevation = 4.0}) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -28,9 +31,10 @@ abstract class TyckaUI {
           onPressed: onPressed,
           child: Text(
             text,
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 16.0, color: textColor ?? Colors.white),
           ),
-          style: _buttonStyle(context),
+          style: _buttonStyle(
+              context, color ?? Theme.of(context).primaryColor, elevation),
         ),
       ),
     );

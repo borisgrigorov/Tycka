@@ -1,6 +1,7 @@
 final List<TestType> predefinedTestTypes = [
-  TestType("LP6464-4", "Nucleic acid amplification with probe detection"),
-  TestType("LP217198-3", "Rapid immunoassay"),
+  TestType(
+      "LP6464-4", "Nucleic acid amplification with probe detection", "PCR"),
+  TestType("LP217198-3", "Rapid immunoassay", "AG"),
 ];
 
 final List<TestResult> predefinedTestResults = [
@@ -11,7 +12,8 @@ final List<TestResult> predefinedTestResults = [
 class TestType {
   String name;
   String code;
-  TestType(this.code, this.name);
+  String aka;
+  TestType(this.code, this.name, this.aka);
 }
 
 class TestResult {

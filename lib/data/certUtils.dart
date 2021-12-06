@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:tycka/consts/tests.dart';
+import 'package:tycka/consts/vacinnes.dart';
 import 'package:tycka/models/certData.dart';
 
 abstract class CertUtils {
@@ -114,6 +117,25 @@ abstract class CertUtils {
         return "r";
       case CertType.UNKNOWN:
         return "v";
+    }
+  }
+
+  static String getSubtitle(BuildContext context, dynamic cert) {
+    switch (cert.certType) {
+      case CertType.VAX:
+        return predefinedVaccineProducts
+            .where((element) => element.code == cert.vaccineProduct)
+            .first
+            .name;
+      case CertType.TEST:
+        return predefinedTestTypes
+            .where((element) => element.code == cert.testType)
+            .first
+            .aka;
+      case CertType.RECOVERY:
+        return "";
+      default:
+        return "";
     }
   }
 }
