@@ -47,46 +47,79 @@ class _QRCodeState extends State<QRCode> {
 
   Widget buildBody() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Center(
-          child: Material(
-            elevation: 20.0,
-            borderRadius: BorderRadius.circular(20.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: Colors.white,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(height: 10.0),
-                    Text(
-                        widget.certificate.data.lastName +
-                            " " +
-                            widget.certificate.data.name,
-                        style: TextStyle(fontSize: 25.0, color: Colors.black)),
-                    SizedBox(height: 10.0),
-                    QrImage(
-                      data: widget.certificate.qrData,
-                    ),
-                  ],
+        Material(
+          elevation: 20.0,
+          borderRadius: BorderRadius.circular(20.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10.0),
+                      Text(
+                          widget.certificate.data.lastName +
+                              " " +
+                              widget.certificate.data.name,
+                          style:
+                              TextStyle(fontSize: 25.0, color: Colors.black)),
+                      SizedBox(height: 10.0),
+                      QrImage(
+                        data: widget.certificate.qrData,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              color: Colors.grey.shade300, width: 1.0))),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                    child: InkWell(
+                      onTap: () => showDetails(),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                          height: 25.0,
+                          width: double.infinity,
+                          child: Center(
+                            child: Text(
+                              "Show details",
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: TyckaUI.secondaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ),
-        TyckaUI.button(
-          context,
-          onPressed: () => showDetails(),
-          text: "Show details",
-          color: Colors.white,
-          textColor: Theme.of(context).primaryColor,
-          elevation: 8.0,
-        )
+        SizedBox(
+          height: 100.0,
+        ),
       ],
     );
   }
