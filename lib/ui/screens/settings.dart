@@ -2,6 +2,7 @@ import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/components.dart';
+import 'package:tycka/ui/screens/aboutApp.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
 import 'package:tycka/utils/themeUtils.dart';
@@ -24,52 +25,76 @@ class _SettingsState extends State<Settings> {
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
         elevation: 0.0,
-        backgroundColor: TyckaUI.primaryColor,
+        backgroundColor: Colors.transparent,
       ),
-      backgroundColor: ThemeUtils.backgroundColor(context),
-      body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: ListView(
-            children: [
-              ListTile(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                title: Text(AppLocalizations.of(context)!.persons),
-                leading: Icon(Icons.person_rounded),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => PersonsSettings())),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Theme.of(context).primaryColor,
+        child: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              color: ThemeUtils.backgroundColor(context),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
               ),
-              ListTile(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                title: Text(AppLocalizations.of(context)!.darkTheme),
-                trailing: Switch(
-                  activeColor: Theme.of(context).accentColor,
-                  value: Theme.of(context).brightness == Brightness.dark,
-                  onChanged: (value) => _setDarkTheme(context),
-                ),
-                leading: Icon(Icons.bedtime_rounded),
-                onTap: () => _setDarkTheme(context),
-              ),
-              appLock(),
-              ListTile(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                title: Text(AppLocalizations.of(context)!.language),
-                leading: Icon(Icons.language),
-                onTap: () => showLanguagesDialog(),
-              ),
-              ListTile(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                title: Text(AppLocalizations.of(context)!.logout),
-                leading: Icon(Icons.logout_rounded),
-                onTap: () {
-                  logOut();
-                },
-              ),
-            ],
-          )),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView(
+                  children: [
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(AppLocalizations.of(context)!.persons),
+                      leading: Icon(Icons.person_rounded),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PersonsSettings())),
+                    ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(AppLocalizations.of(context)!.darkTheme),
+                      trailing: Switch(
+                        activeColor: Theme.of(context).accentColor,
+                        value: Theme.of(context).brightness == Brightness.dark,
+                        onChanged: (value) => _setDarkTheme(context),
+                      ),
+                      leading: Icon(Icons.bedtime_rounded),
+                      onTap: () => _setDarkTheme(context),
+                    ),
+                    appLock(),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(AppLocalizations.of(context)!.language),
+                      leading: Icon(Icons.language),
+                      onTap: () => showLanguagesDialog(),
+                    ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(AppLocalizations.of(context)!.logout),
+                      leading: Icon(Icons.logout_rounded),
+                      onTap: () {
+                        logOut();
+                      },
+                    ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(AppLocalizations.of(context)!.aboutApp),
+                      leading: Icon(Icons.info_rounded),
+                      onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => AboutApp())),
+                    ),
+                  ],
+                )),
+          ),
+        ),
+      ),
     );
   }
 

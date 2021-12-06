@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tycka/consts/vacinnes.dart';
 
 enum CertType { VAX, TEST, RECOVERY, UNKNOWN }
 
@@ -28,7 +29,7 @@ class CertificateData {
   String getCertificateType(BuildContext context) {
     switch (certType) {
       case CertType.VAX:
-        return AppLocalizations.of(context)!.vaccine;
+        return AppLocalizations.of(context)!.vaccination;
       case CertType.TEST:
         return AppLocalizations.of(context)!.test;
       case CertType.RECOVERY:

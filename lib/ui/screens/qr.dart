@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tycka/consts/tests.dart';
 import 'package:tycka/consts/vacinnes.dart';
 import 'package:tycka/models/certData.dart';
-import 'package:tycka/models/certificate.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/utils/themeUtils.dart';
@@ -21,49 +20,116 @@ class _QRCodeState extends State<QRCode> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.qrCode),
+          title: Text(widget.certificate.data.getCertificateType(context)),
           iconTheme: IconThemeData(color: Colors.white),
           brightness: Brightness.dark,
           elevation: 0.0,
-          backgroundColor: TyckaUI.primaryColor,
+          backgroundColor: Colors.transparent,
         ),
+        extendBodyBehindAppBar: true,
         body: Container(
           height: double.infinity,
           width: double.infinity,
-          color: ThemeUtils.isDark(context)
-              ? TyckaUI.backgroundColor
-              : Theme.of(context).primaryColor,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            colors: [
+              TyckaUI.primaryColor,
+              TyckaUI.secondaryColor,
+            ],
+            begin: FractionalOffset(0, 0),
+          )),
+          child: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.all(25.0), child: buildBody()),
+          ),
+        ));
+  }
+
+  Widget buildBody() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Material(
+          elevation: 20.0,
+          borderRadius: BorderRadius.circular(20.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(13.0),
-                      child: QrImage(
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10.0),
+                      Text(
+                          widget.certificate.data.lastName +
+                              " " +
+                              widget.certificate.data.name,
+                          style:
+                              TextStyle(fontSize: 25.0, color: Colors.black)),
+                      SizedBox(height: 10.0),
+                      QrImage(
                         data: widget.certificate.qrData,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              color: Colors.grey.shade300, width: 1.0))),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                    child: InkWell(
+                      onTap: () => showDetails(),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                          height: 25.0,
+                          width: double.infinity,
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.showDetails,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: TyckaUI.secondaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                TyckaUI.button(context,
-                    onPressed: () => showDetails(), text: "Show details")
+                )
               ],
             ),
           ),
-        ));
+        ),
+        SizedBox(
+          height: 100.0,
+        ),
+      ],
+    );
   }
 
   void showDetails() {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
+        backgroundColor:
+            ThemeUtils.isDark(context) ? TyckaUI.backgroundColor : Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.0),
@@ -160,7 +226,7 @@ class _QRCodeState extends State<QRCode> {
                         .replaceAll("-", ""))
                 .first
                 .name),
-        infoRow(AppLocalizations.of(context)!.totalDoses,
+        infoRow(AppLocalizations.of(context)!.vaccinationDate,
             widget.certificate.data.vaccinationDate.toString()),
       ];
     } else if (widget.certificate.data.certType == CertType.TEST) {
