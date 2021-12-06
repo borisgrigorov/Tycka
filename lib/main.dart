@@ -2,6 +2,7 @@ import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:morpheus/page_routes/morpheus_page_route.dart';
 import 'package:tycka/data/data.dart';
 import 'package:tycka/models/person.dart';
 import 'package:tycka/root.dart';
@@ -132,11 +133,14 @@ class _HomeState extends State<Home> {
                           itemCount: tyckaData.persons.length,
                           itemBuilder: (context, index) {
                             Person p = tyckaData.persons[index];
+                            final _parentKey = GlobalKey();
                             return TyckaUI.listTileBackground(
                               context,
                               child: Material(
                                 color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(15.0),
                                 child: ListTile(
+                                  key: _parentKey,
                                   tileColor:
                                       ThemeUtils.backgroundColor(context),
                                   leading: TyckaUI.userAvatar(context),
@@ -147,10 +151,17 @@ class _HomeState extends State<Home> {
                                   subtitle: Text(
                                     '${p.getBetterBirthDate()}',
                                   ),
-                                  onTap: () => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PersonOverview(person: p))),
+                                  onTap: () => Navigator.of(context)
+                                      .push(MorpheusPageRoute(
+                                    builder: (context) =>
+                                        PersonOverview(person: p),
+                                    parentKey: _parentKey,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    transitionColor:
+                                        ThemeUtils.backgroundColor(context),
+                                    transitionDuration:
+                                        Duration(milliseconds: 500),
+                                  )),
                                 ),
                               ),
                             );

@@ -32,71 +32,100 @@ class _PersonSettingsState extends State<PersonsSettings> {
         title: Text(AppLocalizations.of(context)!.persons),
         iconTheme: IconThemeData(color: Colors.white),
         brightness: Brightness.dark,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      backgroundColor: ThemeUtils.backgroundColor(context),
-      body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              ListTile(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0)),
-                title: Text(AppLocalizations.of(context)!.add),
-                leading: Icon(Icons.add_rounded),
-                onTap: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) => Container(
-                            height: 280,
-                            color: ThemeUtils.backgroundColor(context),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .chooseLoginType,
-                                    style: TextStyle(fontSize: 16.0),
-                                  ),
-                                  Padding(
+      extendBodyBehindAppBar: true,
+      body: Container(
+        color: Theme.of(context).primaryColor,
+        height: double.infinity,
+        width: double.infinity,
+        child: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              color: ThemeUtils.backgroundColor(context),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(AppLocalizations.of(context)!.add),
+                      leading: Icon(Icons.add_rounded),
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: ThemeUtils.isDark(context)
+                                ? TyckaUI.backgroundColor
+                                : Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20.0),
+                              topRight: Radius.circular(20.0),
+                            )),
+                            builder: (context) => Container(
+                                  height: 240,
+                                  color: ThemeUtils.backgroundColor(context),
+                                  child: Padding(
                                     padding: const EdgeInsets.all(20.0),
-                                    child: Divider(),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .chooseLoginType,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.white70),
+                                        ),
+                                        SizedBox(
+                                          height: 20.0,
+                                        ),
+                                        TyckaUI.button(context,
+                                            onPressed: () =>
+                                                login(TyckaLoginTypes.NIA),
+                                            text: "eIdentita"),
+                                        TyckaUI.button(context,
+                                            onPressed: () =>
+                                                login(TyckaLoginTypes.SMS),
+                                            text: AppLocalizations.of(context)!
+                                                .oneTimeSMS),
+                                      ],
+                                    ),
                                   ),
-                                  TyckaUI.button(context,
-                                      onPressed: () =>
-                                          login(TyckaLoginTypes.NIA),
-                                      text: "eIdentita"),
-                                  TyckaUI.button(context,
-                                      onPressed: () =>
-                                          login(TyckaLoginTypes.SMS),
-                                      text: AppLocalizations.of(context)!
-                                          .oneTimeSMS),
-                                ],
-                              ),
-                            ),
-                          ));
-                },
-              ),
-              Divider(
-                color: ThemeUtils.isDark(context) ? Colors.white : Colors.black,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: tyckaData.persons.length,
-                  itemBuilder: (context, index) => ListTile(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0)),
-                    title: Text(tyckaData.persons[index].getName()),
-                    subtitle:
-                        Text(tyckaData.persons[index].getBetterBirthDate()),
-                    leading: Icon(Icons.person_rounded),
-                    onTap: () {},
-                  ),
-                ),
-              ),
-            ],
-          )),
+                                ));
+                      },
+                    ),
+                    Divider(
+                      color: ThemeUtils.isDark(context)
+                          ? Colors.white70
+                          : Colors.black,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: tyckaData.persons.length,
+                        itemBuilder: (context, index) => ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0)),
+                          title: Text(tyckaData.persons[index].getName()),
+                          subtitle: Text(
+                              tyckaData.persons[index].getBetterBirthDate()),
+                          leading: Icon(Icons.person_rounded),
+                          onTap: () {},
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        ),
+      ),
     );
   }
 

@@ -45,9 +45,7 @@ class AboutApp extends StatelessWidget {
             child: Text(
               "Tyčka",
               style: GoogleFonts.openSans(
-                  color: Colors.white,
-                  fontSize: 45.0,
-                  fontWeight: FontWeight.w200),
+                  fontSize: 45.0, fontWeight: FontWeight.w200),
             ),
           ),
           SizedBox(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:morpheus/morpheus.dart';
 import 'package:tycka/data/certUtils.dart';
 import 'package:tycka/models/person.dart';
 import 'package:tycka/ui/components.dart';
@@ -64,19 +65,33 @@ class _PersonOverviewState extends State<PersonOverview> {
   Widget buildCerts() {
     return ListView.builder(
         itemCount: person.certificates.length,
-        itemBuilder: (context, index) => ListTile(
-            title: Text(
-                person.certificates[index].data.getCertificateType(context)),
-            subtitle: Text(
-              CertUtils.getSubtitle(context, person.certificates[index].data),
-              overflow: TextOverflow.ellipsis,
-            ),
-            leading: TyckaUI.certificateIcon(context),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      QRCode(certificate: person.certificates[index]),
-                ))));
+        itemBuilder: (context, index) {
+          final _parentKey = GlobalKey();
+          return Material(
+            borderRadius: BorderRadius.circular(15.0),
+            color: Colors.transparent,
+            child: ListTile(
+                key: _parentKey,
+                title: Text(person.certificates[index].data
+                    .getCertificateType(context)),
+                subtitle: Text(
+                  CertUtils.getSubtitle(
+                      context, person.certificates[index].data),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                leading: TyckaUI.certificateIcon(context),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0)),
+                onTap: () => Navigator.of(context).push(MorpheusPageRoute(
+                      builder: (context) =>
+                          QRCode(certificate: person.certificates[index]),
+                      parentKey: _parentKey,
+                      borderRadius: BorderRadius.circular(15.0),
+                      transitionColor: Theme.of(context).primaryColor,
+                      transitionDuration: Duration(milliseconds: 500),
+                      //scrimColor: Theme.of(context).primaryColor
+                    ))),
+          );
+        });
   }
 }

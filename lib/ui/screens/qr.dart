@@ -96,7 +96,7 @@ class _QRCodeState extends State<QRCode> {
         context: context,
         isScrollControlled: true,
         backgroundColor:
-            ThemeUtils.isDark(context) ? Color(0xFF0b0d1c) : Colors.white,
+            ThemeUtils.isDark(context) ? TyckaUI.backgroundColor : Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.0),
