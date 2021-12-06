@@ -44,6 +44,9 @@
     "testName": "Název testu",
     "validFrom": "Platnost od",
     "validUntil": "Platnost do",
-    "firstPositive": "První pozitivní test"
+    "firstPositive": "První pozitivní test",
+    "aboutApp": "O aplikaci",
+    "sourceCode": "Zdrojový kód aplikace",
+    "version": "Verze"
 
 }

@@ -20,7 +20,7 @@
     "cancel": "Cancel",
     "useBiometric": "Fingerprint",
     "fingerprintToContinue": "Please authenticate to continue to Tyčka",
-    "authFailed":"Authentication failed",
+    "authFailed": "Authentication failed",
     "vaccination": "Vaccination",
     "test": "Test",
     "recovery": "Recovery",
@@ -44,5 +44,8 @@
     "testName": "Test name",
     "validFrom": "Valid from",
     "validUntil": "Valid until",
-    "firstPositive": "First positive"
+    "firstPositive": "First positive",
+    "aboutApp": "About app",
+    "sourceCode": "App source code",
+    "version": "Version"
 }
