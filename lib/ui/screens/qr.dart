@@ -65,12 +65,21 @@ class _QRCodeState extends State<QRCode> {
                   child: Column(
                     children: [
                       SizedBox(height: 10.0),
-                      Text(
-                          widget.certificate.data.lastName +
-                              " " +
-                              widget.certificate.data.name,
-                          style:
-                              TextStyle(fontSize: 25.0, color: Colors.black)),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: TyckaUI.secondaryColor.withOpacity(0.1),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 5.0),
+                        width: double.infinity,
+                        child: Text(
+                            widget.certificate.data.lastName +
+                                " " +
+                                widget.certificate.data.name,
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(fontSize: 25.0, color: Colors.black)),
+                      ),
                       SizedBox(height: 10.0),
                       QrImage(
                         data: widget.certificate.qrData,

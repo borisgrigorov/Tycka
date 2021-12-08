@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/login.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
-import 'package:tycka/utils/localAuth.dart';
 import 'package:tycka/utils/themeUtils.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }

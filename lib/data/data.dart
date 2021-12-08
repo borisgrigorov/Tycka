@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:tycka/data/consts.dart';
+import 'package:tycka/data/validation.dart';
 import 'package:tycka/models/certificate.dart';
 import 'package:tycka/models/person.dart';
+import 'package:tycka/models/validationRules.dart';
 import 'package:tycka/utils/localAuth.dart';
 import 'package:tycka/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -17,6 +19,7 @@ class TyckaData {
   List<Person> persons = <Person>[];
   TyckaLocalAuth auth = TyckaLocalAuth();
   TyckaPreferences preferences = TyckaPreferences();
+  CertValidationRules? validationRules;
 
   Future<String> getJwt(String deviceName, String installationID) async {
     var response = await http.post(
@@ -66,6 +69,10 @@ class TyckaData {
         Uri.parse(
             '${TyckaConsts.BASE_UZIS_URL}${TyckaConsts.PERSON_ENDPOINT}/$personId/dgc'),
         headers: {"Authorization": "Bearer $accessToken"});
+    CertValidationRules? rules = await getValidationRules();
+    if (rules != null) {
+      this.validationRules = rules;
+    }
     return response.body;
   }
 
