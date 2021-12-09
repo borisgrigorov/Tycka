@@ -143,7 +143,7 @@ class _HomeState extends State<Home> {
                                   key: _parentKey,
                                   tileColor:
                                       ThemeUtils.backgroundColor(context),
-                                  leading: TyckaUI.userAvatar(context),
+                                  leading: TyckaUI.userAvatar(context, p),
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(15.0)),

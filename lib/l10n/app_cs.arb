@@ -48,6 +48,7 @@
     "aboutApp": "O aplikaci",
     "sourceCode": "Zdrojový kód aplikace",
     "version": "Verze",
-    "showDetails": "Zobrazit detaily"
+    "showDetails": "Zobrazit detaily",
+    "valid": "Platný"
 
 }

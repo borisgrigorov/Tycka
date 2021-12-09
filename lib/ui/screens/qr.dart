@@ -161,6 +161,16 @@ class _QRCodeState extends State<QRCode> {
                         widget.certificate.data.lastName),
                     infoRow(AppLocalizations.of(context)!.certtype,
                         widget.certificate.data.getCertificateType(context)),
+                    infoRow(AppLocalizations.of(context)!.valid, "",
+                        child: widget.certificate.data.isValid
+                            ? Icon(
+                                Icons.check_rounded,
+                                color: TyckaUI.green,
+                              )
+                            : Icon(
+                                Icons.close_rounded,
+                                color: TyckaUI.red,
+                              )),
                     infoRow(AppLocalizations.of(context)!.birthDate,
                         widget.certificate.data.birthDate),
                     ...certSpecificFields(),
@@ -177,7 +187,7 @@ class _QRCodeState extends State<QRCode> {
             )));
   }
 
-  Widget infoRow(String title, String value) {
+  Widget infoRow(String title, String value, {Widget? child}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
       child: Container(
@@ -191,14 +201,17 @@ class _QRCodeState extends State<QRCode> {
               style: TextStyle(color: Colors.grey, fontSize: 16),
               textAlign: TextAlign.left,
             ),
-            Text(
-              value,
-              style: TextStyle(
-                  color:
-                      ThemeUtils.isDark(context) ? Colors.white : Colors.black,
-                  fontSize: 16),
-              textAlign: TextAlign.left,
-            ),
+            child != null
+                ? child
+                : Text(
+                    value,
+                    style: TextStyle(
+                        color: ThemeUtils.isDark(context)
+                            ? Colors.white
+                            : Colors.black,
+                        fontSize: 16),
+                    textAlign: TextAlign.left,
+                  ),
           ],
         ),
       ),

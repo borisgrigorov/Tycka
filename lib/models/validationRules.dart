@@ -16,8 +16,8 @@ class CertValidationRules {
       vaccinesValidity.add(VaccionationValidity(
           vaccineCode: x["vaccineMedicinalProduct"],
           oneDoseVaccineValidFromDays: x["jednodavkovaOdolnostDenOd"] ?? 0,
-          troDoseVaccineValidFromDays: x["dvoudavkovaOdolnostDenOd"] ?? 0,
-          oneDoseVaccineFirstDoseValidFromDays:
+          twoDoseVaccineValidFromDays: x["dvoudavkovaOdolnostDenOd"] ?? 0,
+          twoDoseVaccineFirstDoseValidFromDays:
               x["prvniDavkouOdolnostDenDo"] ?? 0,
           validForDays: x["odolnostMesicDo"] ?? 0));
     }
@@ -46,15 +46,15 @@ class TestValidity {
 class VaccionationValidity {
   String? vaccineCode;
   int oneDoseVaccineValidFromDays;
-  int troDoseVaccineValidFromDays;
-  int oneDoseVaccineFirstDoseValidFromDays;
+  int twoDoseVaccineValidFromDays;
+  int twoDoseVaccineFirstDoseValidFromDays;
 
   int validForDays;
 
   VaccionationValidity(
       {required this.vaccineCode,
-      required this.oneDoseVaccineFirstDoseValidFromDays,
+      required this.twoDoseVaccineFirstDoseValidFromDays,
       required this.oneDoseVaccineValidFromDays,
-      required this.troDoseVaccineValidFromDays,
+      required this.twoDoseVaccineValidFromDays,
       required this.validForDays});
 }

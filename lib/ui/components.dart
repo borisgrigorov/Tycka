@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tycka/models/certData.dart';
+import 'package:tycka/models/person.dart';
 import 'package:tycka/utils/themeUtils.dart';
 
 abstract class TyckaUI {
@@ -6,6 +8,8 @@ abstract class TyckaUI {
   static final Color secondaryColor = Color(0xFF3983D6);
   //static final Color backgroundColor = Colors.black;
   static final Color backgroundColor = Color(0xFF0b0d1c);
+  static final Color green = Color(0xFF006442);
+  static final Color red = Color(0xFFC91F37);
 
   static ButtonStyle _buttonStyle(
       BuildContext context, Color color, double elevation) {
@@ -56,9 +60,9 @@ abstract class TyckaUI {
     }
   }
 
-  static Widget userAvatar(BuildContext context) {
+  static Widget userAvatar(BuildContext context, Person person) {
     return CircleAvatar(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: person.isAtLeastOneValid ? TyckaUI.green : TyckaUI.red,
       child: Icon(
         Icons.person_rounded,
         color: Colors.white,
@@ -66,11 +70,11 @@ abstract class TyckaUI {
     );
   }
 
-  static Widget certificateIcon(BuildContext context) {
+  static Widget certificateIcon(BuildContext context, CertificateData cert) {
     return CircleAvatar(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: cert.isValid ? TyckaUI.green : TyckaUI.red,
       child: Icon(
-        Icons.qr_code_rounded,
+        cert.isValid ? Icons.check_rounded : Icons.close_rounded,
         color: Colors.white,
       ),
     );
