@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tycka/consts/tests.dart';
 import 'package:tycka/consts/vacinnes.dart';
+import 'package:tycka/data/certUtils.dart';
 import 'package:tycka/models/certData.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tycka/ui/components.dart';
@@ -65,12 +66,21 @@ class _QRCodeState extends State<QRCode> {
                   child: Column(
                     children: [
                       SizedBox(height: 10.0),
-                      Text(
-                          widget.certificate.data.lastName +
-                              " " +
-                              widget.certificate.data.name,
-                          style:
-                              TextStyle(fontSize: 25.0, color: Colors.black)),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: TyckaUI.secondaryColor.withOpacity(0.1),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 5.0),
+                        width: double.infinity,
+                        child: Text(
+                            widget.certificate.data.lastName +
+                                " " +
+                                widget.certificate.data.name,
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(fontSize: 25.0, color: Colors.black)),
+                      ),
                       SizedBox(height: 10.0),
                       QrImage(
                         data: widget.certificate.qrData,
@@ -78,6 +88,7 @@ class _QRCodeState extends State<QRCode> {
                     ],
                   ),
                 ),
+                certInfo(),
                 Container(
                   decoration: BoxDecoration(
                       border: Border(
@@ -118,10 +129,57 @@ class _QRCodeState extends State<QRCode> {
           ),
         ),
         SizedBox(
-          height: 100.0,
+          height: 50.0,
         ),
       ],
     );
+  }
+
+  Widget certInfo() {
+    if (widget.certificate.data.certType == CertType.TEST) {
+      return Container(
+        decoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(color: Colors.grey.shade300, width: 1.0))),
+        child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(children: [
+                  Text(AppLocalizations.of(context)!.status,
+                      style: TextStyle(color: Colors.grey)),
+                  SizedBox(height: 10.0),
+                  Icon(
+                      widget.certificate.data.isValid
+                          ? Icons.check_rounded
+                          : Icons.close_rounded,
+                      color: widget.certificate.data.isValid
+                          ? TyckaUI.green
+                          : TyckaUI.red)
+                ]),
+                Column(children: [
+                  Text(AppLocalizations.of(context)!.expireIn,
+                      style: TextStyle(color: Colors.grey)),
+                  SizedBox(height: 10.0),
+                  Text(widget.certificate.data.getExpireTime(context),
+                      style: TextStyle(
+                          color: Colors.grey.shade800, fontSize: 20.0))
+                ]),
+                Column(children: [
+                  Text(AppLocalizations.of(context)!.testType,
+                      style: TextStyle(color: Colors.grey)),
+                  SizedBox(height: 10.0),
+                  Text(CertUtils.getSubtitle(context, widget.certificate.data),
+                      style: TextStyle(
+                          color: Colors.grey.shade800, fontSize: 20.0))
+                ]),
+              ],
+            )),
+      );
+    } else {
+      return SizedBox(height: 0.0);
+    }
   }
 
   void showDetails() {
@@ -152,6 +210,16 @@ class _QRCodeState extends State<QRCode> {
                         widget.certificate.data.lastName),
                     infoRow(AppLocalizations.of(context)!.certtype,
                         widget.certificate.data.getCertificateType(context)),
+                    infoRow(AppLocalizations.of(context)!.valid, "",
+                        child: widget.certificate.data.isValid
+                            ? Icon(
+                                Icons.check_rounded,
+                                color: TyckaUI.green,
+                              )
+                            : Icon(
+                                Icons.close_rounded,
+                                color: TyckaUI.red,
+                              )),
                     infoRow(AppLocalizations.of(context)!.birthDate,
                         widget.certificate.data.birthDate),
                     ...certSpecificFields(),
@@ -168,7 +236,7 @@ class _QRCodeState extends State<QRCode> {
             )));
   }
 
-  Widget infoRow(String title, String value) {
+  Widget infoRow(String title, String value, {Widget? child}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
       child: Container(
@@ -182,14 +250,17 @@ class _QRCodeState extends State<QRCode> {
               style: TextStyle(color: Colors.grey, fontSize: 16),
               textAlign: TextAlign.left,
             ),
-            Text(
-              value,
-              style: TextStyle(
-                  color:
-                      ThemeUtils.isDark(context) ? Colors.white : Colors.black,
-                  fontSize: 16),
-              textAlign: TextAlign.left,
-            ),
+            child != null
+                ? child
+                : Text(
+                    value,
+                    style: TextStyle(
+                        color: ThemeUtils.isDark(context)
+                            ? Colors.white
+                            : Colors.black,
+                        fontSize: 16),
+                    textAlign: TextAlign.left,
+                  ),
           ],
         ),
       ),
@@ -227,7 +298,7 @@ class _QRCodeState extends State<QRCode> {
                 .first
                 .name),
         infoRow(AppLocalizations.of(context)!.vaccinationDate,
-            widget.certificate.data.vaccinationDate.toString()),
+            widget.certificate.data.getDate()),
       ];
     } else if (widget.certificate.data.certType == CertType.TEST) {
       return [
@@ -243,7 +314,7 @@ class _QRCodeState extends State<QRCode> {
             : infoRow(AppLocalizations.of(context)!.testName,
                 widget.certificate.data.testName),
         infoRow(AppLocalizations.of(context)!.testDate,
-            widget.certificate.data.date),
+            widget.certificate.data.getDate()),
         infoRow(AppLocalizations.of(context)!.testPlace,
             widget.certificate.data.testingCenter),
         infoRow(

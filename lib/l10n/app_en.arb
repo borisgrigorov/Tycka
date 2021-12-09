@@ -32,7 +32,7 @@
     "certIssuer": "Certificate issuer",
     "certId": "Certificate ID",
     "vaccine": "Vaccine",
-    "vaccineManufacture": "Vaccine manufacture",
+    "vaccineManufacture": "Vaccine manufacturer",
     "doses": "Doses",
     "totalDoses": "Total doses",
     "vaccinationDate": "Date of vaccination",
@@ -48,5 +48,9 @@
     "aboutApp": "About app",
     "sourceCode": "App source code",
     "version": "Version",
-    "showDetails": "Show details"
+    "showDetails": "Show details",
+    "valid": "Valid",
+    "status": "Status",
+    "expireIn": "Expire in",
+    "expired": "Expired"
 }

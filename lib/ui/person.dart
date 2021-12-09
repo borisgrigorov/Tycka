@@ -79,7 +79,8 @@ class _PersonOverviewState extends State<PersonOverview> {
                       context, person.certificates[index].data),
                   overflow: TextOverflow.ellipsis,
                 ),
-                leading: TyckaUI.certificateIcon(context),
+                leading: TyckaUI.certificateIcon(
+                    context, person.certificates[index].data),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
                 onTap: () => Navigator.of(context).push(MorpheusPageRoute(

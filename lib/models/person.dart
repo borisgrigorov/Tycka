@@ -32,4 +32,7 @@ class Person {
         dateOfBith: DateTime.parse(data["dateOfBirth"]));
     return person;
   }
+
+  bool get isAtLeastOneValid =>
+      certificates.any((certificate) => certificate.data.isValid);
 }
