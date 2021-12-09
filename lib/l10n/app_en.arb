@@ -49,5 +49,8 @@
     "sourceCode": "App source code",
     "version": "Version",
     "showDetails": "Show details",
-    "valid": "Valid"
+    "valid": "Valid",
+    "status": "Status",
+    "expireIn": "Expire in",
+    "expired": "Expired"
 }

@@ -49,6 +49,8 @@
     "sourceCode": "Zdrojový kód aplikace",
     "version": "Verze",
     "showDetails": "Zobrazit detaily",
-    "valid": "Platný"
-
+    "valid": "Platný",
+    "status": "Status",
+    "expireIn": "Vyprší za",
+    "expired": "Vypršel"
 }

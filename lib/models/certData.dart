@@ -113,6 +113,11 @@ class VaccinationCert extends CertificateData {
       }
     }
   }
+
+  String getDate() {
+    DateTime date = DateTime.parse(this.vaccinationDate);
+    return '${date.day}. ${date.month}. ${date.year}';
+  }
 }
 
 class TestCert extends CertificateData {
@@ -170,6 +175,16 @@ class TestCert extends CertificateData {
     }
   }
 
+  String getExpireTime(BuildContext context) {
+    if (DateTime.parse(this.date).isBefore(DateTime.now())) {
+      return AppLocalizations.of(context)!.expired;
+    } else {
+      int hours =
+          TimeUtils.getHoursBetween(DateTime.parse(this.date), DateTime.now());
+      return hours.toString() + "h";
+    }
+  }
+
   bool isPositive() {
     List<TestResult> test = predefinedTestResults
         .where((element) => element.code == this.result)
@@ -183,6 +198,11 @@ class TestCert extends CertificateData {
         return false;
       }
     }
+  }
+
+  String getDate() {
+    DateTime date = DateTime.parse(this.date);
+    return '${date.day}. ${date.month}. ${date.year} ${date.hour}:${date.minute < 10 ? "0" : ""}${date.minute}';
   }
 }
 
@@ -230,5 +250,15 @@ class RecoveryCert extends CertificateData {
         return false;
       }
     }
+  }
+
+  String getFrom() {
+    DateTime date = DateTime.parse(this.validFrom);
+    return '${date.day}. ${date.month}. ${date.year}';
+  }
+
+  String getTo() {
+    DateTime date = DateTime.parse(this.validUntil);
+    return '${date.day}. ${date.month}. ${date.year}';
   }
 }
