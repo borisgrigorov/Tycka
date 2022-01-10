@@ -62,5 +62,10 @@
     "downloadFailed": "Download failed",
     "downloaded": "Downloaded",
     "open": "Open",
-    "share": "Share"
+    "share": "Share",
+    "exportAsImage": "Export as image",
+    "showName": "Show name",
+    "showBirthday": "Show birthday",
+    "export": "Export",
+    "exported": "Exported"
 }

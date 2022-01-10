@@ -62,5 +62,10 @@
     "downloadFailed": "Stahování selhalo",
     "downloaded": "Staženo",
     "open": "Otevřít",
-    "share": "Sdílet"
+    "share": "Sdílet",
+    "exportAsImage": "Exportovat jako obrázek",
+    "showName": "Zobrazit jméno",
+    "showBirthday": "Zobrazit datum narození",
+    "export": "Exportovat",
+    "exported": "Exportováno"
 }

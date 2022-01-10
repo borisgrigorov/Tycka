@@ -31,7 +31,7 @@ class _QRCodeState extends State<QRCode> {
             IconButton(
               icon: Icon(Icons.more_vert_rounded),
               onPressed: () {
-                QRMenu.showQrCodeMenu(context, widget.certificate.data);
+                QRMenu.showQrCodeMenu(context, widget.certificate);
               },
             ),
           ],

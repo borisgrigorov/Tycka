@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,20 +5,47 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/models/certData.dart';
+import 'package:tycka/models/certificate.dart';
 import 'package:tycka/ui/modal.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/ui/screens/downloadCert.dart';
+import 'package:tycka/ui/screens/exportImage.dart';
 
 abstract class QRMenu {
-  static void showQrCodeMenu(BuildContext context, CertificateData certicate) {
+  static void showQrCodeMenu(BuildContext context, Certificate certicate) {
     TyckaBottomSheet.show(context, dismissible: true, children: [
       ListTile(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: Text(AppLocalizations.of(context)!.download + " PDF"),
           leading: Icon(Icons.download_rounded),
-          onTap: () => _downloadPdf(context, certicate)),
+          onTap: () => _downloadPdf(context, certicate.data)),
+      ListTile(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Text(AppLocalizations.of(context)!.exportAsImage),
+          leading: Icon(Icons.share),
+          onTap: () => _exportAsImage(context, certicate)),
     ]);
+  }
+
+  static _exportAsImage(BuildContext context, Certificate cert) async {
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      Navigator.of(context).pop();
+      TyckaBottomSheet.show(context, children: [
+        ExportCertToImage(
+          cert: cert,
+        )
+      ]);
+    } else {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!.storagePermissionDenied),
+        duration: Duration(seconds: 3),
+      ));
+    }
   }
 
   static _downloadPdf(BuildContext context, CertificateData certicate) async {
