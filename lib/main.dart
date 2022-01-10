@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:morpheus/page_routes/morpheus_page_route.dart';
@@ -13,12 +14,18 @@ import 'package:tycka/root.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/ui/loginModal.dart';
 import 'package:tycka/ui/person.dart';
+import 'package:tycka/ui/screens/qrMenu.dart';
 import 'package:tycka/ui/screens/settings.dart';
 import 'package:tycka/ui/themes.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
+  FlutterDownloader.registerCallback(downloadCallback);
+  runApp(MyApp());
+}
 
 TyckaData tyckaData = TyckaData();
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/consts/tests.dart';
-import 'package:tycka/consts/vacinnes.dart';
+import 'package:tycka/data/consts.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/models/validationRules.dart';
 import 'package:tycka/utils/timeUtils.dart';
@@ -44,6 +44,9 @@ class CertificateData {
   }
 
   bool get isValid => false;
+
+  String get getPdfDownloadUrl =>
+      '${TyckaConsts.BASE_UZIS_URL}${TyckaConsts.DOWNLOAD_PDF_URL}/$certID';
 }
 
 class VaccinationCert extends CertificateData {

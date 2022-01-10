@@ -61,10 +61,11 @@ class _RootState extends State<Root> {
       setState(() {
         status = IsLoggedIn.LOGGED_IN;
       });
+    } else {
+      setState(() {
+        status = IsLoggedIn.LOGGED_OUT;
+      });
     }
-    setState(() {
-      status = IsLoggedIn.LOGGED_OUT;
-    });
   }
 
   void loginCallback() async {

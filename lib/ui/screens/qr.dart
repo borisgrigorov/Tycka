@@ -5,6 +5,7 @@ import 'package:tycka/data/certUtils.dart';
 import 'package:tycka/models/certData.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tycka/ui/components.dart';
+import 'package:tycka/ui/screens/qrMenu.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -26,6 +27,14 @@ class _QRCodeState extends State<QRCode> {
           brightness: Brightness.dark,
           elevation: 0.0,
           backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.more_vert_rounded),
+              onPressed: () {
+                QRMenu.showQrCodeMenu(context, widget.certificate.data);
+              },
+            ),
+          ],
         ),
         extendBodyBehindAppBar: true,
         body: Container(

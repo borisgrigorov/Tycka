@@ -55,5 +55,12 @@
     "expired": "Expired",
     "remove": "Remove",
     "noOneAdded": "There is no person added, please login to view your certificates.",
-    "login": "Login"
+    "login": "Login",
+    "download": "Download",
+    "storagePermissionDenied": "Storage permission denied",
+    "downloading": "Downloading",
+    "downloadFailed": "Download failed",
+    "downloaded": "Downloaded",
+    "open": "Open",
+    "share": "Share"
 }

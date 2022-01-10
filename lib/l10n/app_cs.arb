@@ -55,5 +55,12 @@
     "expired": "Vypršel",
     "remove": "Odebrat",
     "noOneAdded": "Nebyla přidána žádná osoba, pro zobrazení certifikátů se přihlaste.",
-    "login": "Přihlásit se"
+    "login": "Přihlásit se",
+    "download": "Stáhnout",
+    "storagePermissionDenied": "Přístup k úložišti zamítnut",
+    "downloading": "Stahování",
+    "downloadFailed": "Stahování selhalo",
+    "downloaded": "Staženo",
+    "open": "Otevřít",
+    "share": "Sdílet"
 }
