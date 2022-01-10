@@ -2,6 +2,7 @@ import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/components.dart';
+import 'package:tycka/ui/modal.dart';
 import 'package:tycka/ui/screens/aboutApp.dart';
 import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
@@ -41,57 +42,63 @@ class _SettingsState extends State<Settings> {
                 topRight: Radius.circular(30),
               ),
             ),
-            child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ListView(
-                  children: [
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      title: Text(AppLocalizations.of(context)!.persons),
-                      leading: Icon(Icons.person_rounded),
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PersonsSettings())),
-                    ),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      title: Text(AppLocalizations.of(context)!.darkTheme),
-                      trailing: Switch(
-                        activeColor: Theme.of(context).accentColor,
-                        value: Theme.of(context).brightness == Brightness.dark,
-                        onChanged: (value) => _setDarkTheme(context),
+            child: Material(
+              color: Colors.transparent,
+              child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        title: Text(AppLocalizations.of(context)!.persons),
+                        leading: Icon(Icons.person_rounded),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => PersonsSettings())),
                       ),
-                      leading: Icon(Icons.bedtime_rounded),
-                      onTap: () => _setDarkTheme(context),
-                    ),
-                    appLock(),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      title: Text(AppLocalizations.of(context)!.language),
-                      leading: Icon(Icons.language),
-                      onTap: () => showLanguagesDialog(),
-                    ),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      title: Text(AppLocalizations.of(context)!.logout),
-                      leading: Icon(Icons.logout_rounded),
-                      onTap: () {
-                        logOut();
-                      },
-                    ),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                      title: Text(AppLocalizations.of(context)!.aboutApp),
-                      leading: Icon(Icons.info_rounded),
-                      onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => AboutApp())),
-                    ),
-                  ],
-                )),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        title: Text(AppLocalizations.of(context)!.darkTheme),
+                        trailing: Switch(
+                          activeColor: Theme.of(context).accentColor,
+                          value:
+                              Theme.of(context).brightness == Brightness.dark,
+                          onChanged: (value) => _setDarkTheme(context),
+                        ),
+                        leading: Icon(Icons.bedtime_rounded),
+                        onTap: () => _setDarkTheme(context),
+                      ),
+                      appLock(),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        title: Text(AppLocalizations.of(context)!.language),
+                        leading: Icon(Icons.language),
+                        onTap: () => showLanguagesDialog(),
+                      ),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        title: Text(AppLocalizations.of(context)!.logout),
+                        leading: Icon(Icons.logout_rounded),
+                        onTap: () {
+                          logOut();
+                        },
+                      ),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        title: Text(AppLocalizations.of(context)!.aboutApp),
+                        leading: Icon(Icons.info_rounded),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => AboutApp())),
+                      ),
+                    ],
+                  )),
+            ),
           ),
         ),
       ),
@@ -105,30 +112,28 @@ class _SettingsState extends State<Settings> {
 
   void setLanguage(String locale) async {
     await tyckaData.preferences.setLanguge(locale);
+    Navigator.of(context).pop();
     MyApp.of(context)!.setLocale(Locale(locale));
   }
 
   void showLanguagesDialog() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text(AppLocalizations.of(context)!.language),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      title: Text("Czech"),
-                      onTap: () => setLanguage("cs")),
-                  ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      title: Text("English"),
-                      onTap: () => setLanguage("en")),
-                ],
-              ),
-            ));
+    TyckaBottomSheet.show(
+      context,
+      children: [
+        ListTile(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Text("Czech"),
+            leading: Icon(Icons.language),
+            onTap: () => setLanguage("cs")),
+        ListTile(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Text("English"),
+            leading: Icon(Icons.language),
+            onTap: () => setLanguage("en")),
+      ],
+    );
   }
 
   void logOut() {
@@ -162,7 +167,7 @@ class _SettingsState extends State<Settings> {
         leading: Icon(Icons.fingerprint_rounded),
         trailing: Switch(
           value: tyckaData.preferences.useBiometric!,
-          activeColor: Theme.of(context).accentColor,
+          activeColor: TyckaUI.secondaryColor,
           onChanged: (value) => setAppLock(value),
         ),
         onTap: () => setAppLock(!tyckaData.preferences.useBiometric!),

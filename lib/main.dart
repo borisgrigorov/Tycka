@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:dynamic_themes/dynamic_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:morpheus/page_routes/morpheus_page_route.dart';
 import 'package:tycka/data/data.dart';
 import 'package:tycka/models/person.dart';
+import 'package:tycka/models/personsBloc.dart';
 import 'package:tycka/root.dart';
 import 'package:tycka/ui/components.dart';
+import 'package:tycka/ui/loginModal.dart';
 import 'package:tycka/ui/person.dart';
 import 'package:tycka/ui/screens/settings.dart';
 import 'package:tycka/ui/themes.dart';
@@ -70,6 +75,25 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool _isLoading = false;
+
+  StreamSubscription? _newLogin;
+  @override
+  void initState() {
+    super.initState();
+    _newLogin = tyckaData.authStream.stream.listen((_) {
+      tyckaData.getPersons();
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _newLogin?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,42 +153,49 @@ class _HomeState extends State<Home> {
                       height: 20.0,
                     ),
                     Expanded(
-                      child: ListView.builder(
-                          itemCount: tyckaData.persons.length,
-                          itemBuilder: (context, index) {
-                            Person p = tyckaData.persons[index];
-                            final _parentKey = GlobalKey();
-                            return TyckaUI.listTileBackground(
-                              context,
-                              child: Material(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(15.0),
-                                child: ListTile(
-                                  key: _parentKey,
-                                  tileColor:
-                                      ThemeUtils.backgroundColor(context),
-                                  leading: TyckaUI.userAvatar(context, p),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(15.0)),
-                                  title: Text(p.getName()),
-                                  subtitle: Text(
-                                    '${p.getBetterBirthDate()}',
-                                  ),
-                                  onTap: () => Navigator.of(context)
-                                      .push(MorpheusPageRoute(
-                                    builder: (context) =>
-                                        PersonOverview(person: p),
-                                    parentKey: _parentKey,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    transitionColor:
-                                        ThemeUtils.backgroundColor(context),
-                                    transitionDuration:
-                                        Duration(milliseconds: 500),
-                                  )),
-                                ),
-                              ),
-                            );
+                      child: BlocBuilder<PersonBloc, List<Person>>(
+                          bloc: tyckaData.persons,
+                          builder: (context, data) {
+                            if (data.isEmpty) return showEmpty();
+                            return ListView.builder(
+                                itemCount: data.length,
+                                itemBuilder: (context, index) {
+                                  Person p = data[index];
+                                  final _parentKey = GlobalKey();
+                                  return TyckaUI.listTileBackground(
+                                    context,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child: ListTile(
+                                        key: _parentKey,
+                                        tileColor:
+                                            ThemeUtils.backgroundColor(context),
+                                        leading: TyckaUI.userAvatar(context, p),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0)),
+                                        title: Text(p.getName()),
+                                        subtitle: Text(
+                                          '${p.getBetterBirthDate()}',
+                                        ),
+                                        onTap: () => Navigator.of(context)
+                                            .push(MorpheusPageRoute(
+                                          builder: (context) =>
+                                              PersonOverview(person: p),
+                                          parentKey: _parentKey,
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          transitionColor:
+                                              ThemeUtils.backgroundColor(
+                                                  context),
+                                          transitionDuration:
+                                              Duration(milliseconds: 500),
+                                        )),
+                                      ),
+                                    ),
+                                  );
+                                });
                           }),
                     ),
                   ],
@@ -172,6 +203,39 @@ class _HomeState extends State<Home> {
               ),
             ),
             TyckaUI.loading(_isLoading),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget showEmpty() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.noOneAdded,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            TyckaUI.button(context, elevation: 0.0, onPressed: () {
+              tyckaLoginModal(context, callback: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  _isLoading = true;
+                });
+              });
+            }, text: AppLocalizations.of(context)!.login)
           ],
         ),
       ),

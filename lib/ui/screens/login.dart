@@ -1,15 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:tycka/data/consts.dart';
 import 'package:tycka/ui/components.dart';
 import 'package:tycka/ui/tyckaDialog.dart';
 import 'package:tycka/utils/themeUtils.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:tycka/main.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as customTabs;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {
@@ -21,21 +17,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  StreamSubscription? _intentDataStreamSubscription;
+  StreamSubscription? _authSubscription;
   void initState() {
     super.initState();
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
-      if (value == "tyckaapp://loggedIn") {
-        check(context);
-      }
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
-    ReceiveSharingIntent.getInitialText().then((String? value) {
-      if (value == "tyckaapp://loggedIn") {
-        check(context);
-      }
+    _authSubscription = tyckaData.authStream.stream.listen((event) {
+      check(context);
     });
   }
 
@@ -45,7 +31,7 @@ class _LoginState extends State<Login> {
   }
 
   void dispose() {
-    _intentDataStreamSubscription?.cancel();
+    _authSubscription?.cancel();
     super.dispose();
   }
 
@@ -96,30 +82,15 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void login(TyckaLoginTypes provider) async {
+  void login(TyckaLoginTypes provider) {
     setState(() {
       _isLoading = true;
     });
-    String loginUrl = await tyckaData.registerNewDevice(provider);
     try {
-      customTabs.launch(loginUrl,
-          customTabsOption: customTabs.CustomTabsOption(
-            animation: customTabs.CustomTabsSystemAnimation.slideIn(),
-            toolbarColor: Theme.of(context).primaryColor,
-            enableDefaultShare: true,
-            enableUrlBarHiding: true,
-            showPageTitle: true,
-          ));
+      tyckaData.login(provider);
     } catch (e) {
-      try {
-        launch(loginUrl);
-      } catch (e) {
-        Clipboard.setData(ClipboardData(text: loginUrl));
-        await TyckaDialog.show(
-            context,
-            AppLocalizations.of(context)!.openBrowserFailed,
-            AppLocalizations.of(context)!.linkWasCopiedOpenInBrowser);
-      }
+      TyckaDialog.show(context, AppLocalizations.of(context)!.openBrowserFailed,
+          AppLocalizations.of(context)!.linkWasCopiedOpenInBrowser);
     }
   }
 }

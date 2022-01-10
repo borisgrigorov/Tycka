@@ -52,5 +52,8 @@
     "valid": "Platný",
     "status": "Status",
     "expireIn": "Vyprší za",
-    "expired": "Vypršel"
+    "expired": "Vypršel",
+    "remove": "Odebrat",
+    "noOneAdded": "Nebyla přidána žádná osoba, pro zobrazení certifikátů se přihlaste.",
+    "login": "Přihlásit se"
 }

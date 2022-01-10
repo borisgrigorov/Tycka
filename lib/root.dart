@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tycka/main.dart';
 import 'package:tycka/ui/screens/login.dart';
-import 'package:tycka/ui/tyckaDialog.dart';
 import 'package:tycka/utils/themeUtils.dart';
 
 enum IsLoggedIn { WAITING, LOGGED_IN, LOGGED_OUT }
@@ -58,26 +57,14 @@ class _RootState extends State<Root> {
     await tyckaData.getLoginStatus();
     if (tyckaData.isLoggedIn == true) {
       await tyckaData.getPersons();
-      if (tyckaData.persons.length == 0) {
-        await TyckaDialog.show(
-            context,
-            AppLocalizations.of(context)!.appWasDeauthorized,
-            AppLocalizations.of(context)!.isNeededToLoginAgain);
-        await tyckaData.logOut();
-        tyckaData.persons = [];
-        setState(() {
-          status = IsLoggedIn.LOGGED_OUT;
-        });
-      } else {
-        setState(() {
-          status = IsLoggedIn.LOGGED_IN;
-        });
-      }
-    } else {
+
       setState(() {
-        status = IsLoggedIn.LOGGED_OUT;
+        status = IsLoggedIn.LOGGED_IN;
       });
     }
+    setState(() {
+      status = IsLoggedIn.LOGGED_OUT;
+    });
   }
 
   void loginCallback() async {
@@ -94,7 +81,7 @@ class _RootState extends State<Root> {
     tyckaData.preferences.useBiometric = false;
     await tyckaData.preferences.resetLanguage();
     await tyckaData.preferences.setBiometric(false);
-    tyckaData.persons = [];
+    tyckaData.persons.setList([]);
     setState(() {
       status = IsLoggedIn.LOGGED_OUT;
     });

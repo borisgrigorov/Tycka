@@ -1,25 +1,33 @@
 import 'dart:convert';
 
+import 'package:device_info/device_info.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:tycka/data/consts.dart';
 import 'package:tycka/data/validation.dart';
 import 'package:tycka/models/certificate.dart';
 import 'package:tycka/models/person.dart';
+import 'package:tycka/models/personsBloc.dart';
 import 'package:tycka/models/validationRules.dart';
+import 'package:tycka/ui/components.dart';
+import 'package:tycka/utils/authStream.dart';
 import 'package:tycka/utils/localAuth.dart';
 import 'package:tycka/utils/preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as customTabs;
 
 class TyckaData {
   final uuid = Uuid();
   final secureStorage = FlutterSecureStorage();
   bool? isLoggedIn;
   String? deviceId;
-  List<Person> persons = <Person>[];
+  PersonBloc persons = PersonBloc();
   TyckaLocalAuth auth = TyckaLocalAuth();
   TyckaPreferences preferences = TyckaPreferences();
   CertValidationRules? validationRules;
+  AuthStream authStream = AuthStream();
 
   Future<String> getJwt(String deviceName, String installationID) async {
     var response = await http.post(
@@ -51,6 +59,7 @@ class TyckaData {
         Uri.parse('${TyckaConsts.BASE_UZIS_URL}${TyckaConsts.PERSON_ENDPOINT}'),
         headers: {"Authorization": "Bearer $accessToken"});
     var data = json.decode(response.body);
+    List<Person> newPersons = [];
     for (final x in data) {
       Person person = Person.fromJson(x);
       var certData = json.decode(await this.getCertificates(person.id));
@@ -58,9 +67,10 @@ class TyckaData {
         Certificate c = Certificate.fromJson(x);
         person.certificates.add(c);
       }
-      this.persons.add(person);
+      newPersons.add(person);
     }
-    return this.persons;
+    persons.setList(newPersons);
+    return this.persons.state;
   }
 
   Future<String> getCertificates(personId) async {
@@ -111,12 +121,48 @@ class TyckaData {
 
   Future<String> registerNewDevice(TyckaLoginTypes provider) async {
     this.deviceId = await getDeviceId();
-    String accessToken =
-        await getJwt(TyckaConsts.DEVICE_NAME, this.deviceId ?? "");
+    AndroidDeviceInfo deviceInfo = await DeviceInfoPlugin().androidInfo;
+    String accessToken = await getJwt(
+        '${TyckaConsts.DEVICE_NAME} - ${deviceInfo.model}',
+        this.deviceId ?? "");
     return getLoginUrl(accessToken, provider);
   }
 
   Future<String> getAccessToken() async {
     return await getJwt(TyckaConsts.DEVICE_NAME, this.deviceId ?? "");
+  }
+
+  Future<bool> removePerson(String personId) async {
+    String accessToken = await this.getAccessToken();
+    var response = await http.delete(
+        Uri.parse(
+            '${TyckaConsts.BASE_UZIS_URL}${TyckaConsts.PERSON_ENDPOINT}/$personId'),
+        headers: {"Authorization": "Bearer $accessToken"});
+    if (response.statusCode != 200) {
+      return false;
+    }
+    persons.removePersonById(personId);
+    return true;
+  }
+
+  void login(TyckaLoginTypes provider) async {
+    String loginUrl = await registerNewDevice(provider);
+    try {
+      customTabs.launch(loginUrl,
+          customTabsOption: customTabs.CustomTabsOption(
+            animation: customTabs.CustomTabsSystemAnimation.slideIn(),
+            toolbarColor: TyckaUI.primaryColor,
+            enableDefaultShare: true,
+            enableUrlBarHiding: true,
+            showPageTitle: true,
+          ));
+    } catch (e) {
+      try {
+        launch(loginUrl);
+      } catch (e) {
+        Clipboard.setData(ClipboardData(text: loginUrl));
+        throw loginUrl;
+      }
+    }
   }
 }

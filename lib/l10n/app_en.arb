@@ -52,5 +52,8 @@
     "valid": "Valid",
     "status": "Status",
     "expireIn": "Expire in",
-    "expired": "Expired"
+    "expired": "Expired",
+    "remove": "Remove",
+    "noOneAdded": "There is no person added, please login to view your certificates.",
+    "login": "Login"
 }
