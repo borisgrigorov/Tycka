@@ -179,11 +179,15 @@ class TestCert extends CertificateData {
   }
 
   String getExpireTime(BuildContext context) {
-    if (DateTime.parse(this.date).isBefore(DateTime.now())) {
+    List<TestValidity> test = tyckaData.validationRules!.testsValidity
+        .where((element) => element.testCode == this.testType)
+        .toList();
+    DateTime testDate = DateTime.parse(this.date);
+    testDate = testDate.add(Duration(hours: test[0].validForHours));
+    if (testDate.isBefore(DateTime.now())) {
       return AppLocalizations.of(context)!.expired;
     } else {
-      int hours =
-          TimeUtils.getHoursBetween(DateTime.parse(this.date), DateTime.now());
+      int hours = TimeUtils.getHoursBetween(DateTime.now(), testDate);
       return hours.toString() + "h";
     }
   }
