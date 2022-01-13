@@ -7,6 +7,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:morpheus/page_routes/morpheus_page_route.dart';
+import 'package:tycka/data/certsStatusBloc.dart';
 import 'package:tycka/data/data.dart';
 import 'package:tycka/models/person.dart';
 import 'package:tycka/models/personsBloc.dart';
@@ -160,56 +161,150 @@ class _HomeState extends State<Home> {
                       height: 20.0,
                     ),
                     Expanded(
-                      child: BlocBuilder<PersonBloc, List<Person>>(
-                          bloc: tyckaData.persons,
-                          builder: (context, data) {
-                            if (data.isEmpty) return showEmpty();
-                            return ListView.builder(
-                                itemCount: data.length,
-                                itemBuilder: (context, index) {
-                                  Person p = data[index];
-                                  final _parentKey = GlobalKey();
-                                  return TyckaUI.listTileBackground(
-                                    context,
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      child: ListTile(
-                                        key: _parentKey,
-                                        tileColor:
-                                            ThemeUtils.backgroundColor(context),
-                                        leading: TyckaUI.userAvatar(context, p),
-                                        shape: RoundedRectangleBorder(
+                      child: RefreshIndicator(
+                        onRefresh: () {
+                          setState(() {
+                            _showBanner = true;
+                          });
+                          tyckaData.fetchStatus
+                              .setStatus(FETCH_STATUS.ONLINE_FETCHING);
+                          tyckaData.getPersons();
+                          return Future.value();
+                        },
+                        child: BlocBuilder<PersonBloc, List<Person>>(
+                            bloc: tyckaData.persons,
+                            builder: (context, data) {
+                              if (data.isEmpty) return showEmpty();
+                              return ListView.builder(
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) {
+                                    Person p = data[index];
+                                    final _parentKey = GlobalKey();
+                                    return TyckaUI.listTileBackground(
+                                      context,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        child: ListTile(
+                                          key: _parentKey,
+                                          tileColor: ThemeUtils.backgroundColor(
+                                              context),
+                                          leading:
+                                              TyckaUI.userAvatar(context, p),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0)),
+                                          title: Text(p.getName()),
+                                          subtitle: Text(
+                                            '${p.getBetterBirthDate()}',
+                                          ),
+                                          onTap: () => Navigator.of(context)
+                                              .push(MorpheusPageRoute(
+                                            builder: (context) =>
+                                                PersonOverview(person: p),
+                                            parentKey: _parentKey,
                                             borderRadius:
-                                                BorderRadius.circular(15.0)),
-                                        title: Text(p.getName()),
-                                        subtitle: Text(
-                                          '${p.getBetterBirthDate()}',
+                                                BorderRadius.circular(15.0),
+                                            transitionColor:
+                                                ThemeUtils.backgroundColor(
+                                                    context),
+                                            transitionDuration:
+                                                Duration(milliseconds: 500),
+                                          )),
                                         ),
-                                        onTap: () => Navigator.of(context)
-                                            .push(MorpheusPageRoute(
-                                          builder: (context) =>
-                                              PersonOverview(person: p),
-                                          parentKey: _parentKey,
-                                          borderRadius:
-                                              BorderRadius.circular(15.0),
-                                          transitionColor:
-                                              ThemeUtils.backgroundColor(
-                                                  context),
-                                          transitionDuration:
-                                              Duration(milliseconds: 500),
-                                        )),
                                       ),
-                                    ),
-                                  );
-                                });
-                          }),
+                                    );
+                                  });
+                            }),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
+            overlay(),
             TyckaUI.loading(_isLoading),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Timer? _closeBanner;
+  bool _showBanner = true;
+  Widget overlay() {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            BlocBuilder<CertFetchStatus, FETCH_STATUS>(
+                bloc: tyckaData.fetchStatus,
+                builder: (context, data) {
+                  String text = "";
+                  IconData icon = Icons.download_rounded;
+                  bool progress = true;
+                  switch (data) {
+                    case FETCH_STATUS.OFFLINE:
+                      text = "Using offline data";
+                      icon = Icons.cloud_off_rounded;
+                      progress = false;
+                      break;
+                    case FETCH_STATUS.OFFLINE_FAILED:
+                      text = "Cannot retreive offline data";
+                      progress = false;
+                      icon = Icons.error_rounded;
+                      break;
+                    case FETCH_STATUS.ONLINE_FETCHED:
+                      text = "Fetched newest certificates";
+                      progress = false;
+                      icon = Icons.done_rounded;
+                      _closeBanner =
+                          Timer.periodic(Duration(seconds: 2), (timer) {
+                        setState(() {
+                          _showBanner = false;
+                        });
+                        _closeBanner?.cancel();
+                      });
+                      break;
+                    case FETCH_STATUS.ONLINE_FETCHING:
+                      text = "Fetching newest certificates";
+                      progress = true;
+                      icon = Icons.download_rounded;
+                      break;
+                  }
+                  return !_showBanner
+                      ? SizedBox()
+                      : Container(
+                          decoration: BoxDecoration(
+                              color: ThemeUtils.backgroundColor(context)
+                                  .withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: ListTile(
+                            title: Text(text),
+                            leading: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                progress
+                                    ? CircularProgressIndicator(
+                                        strokeWidth: 2.0,
+                                      )
+                                    : SizedBox(
+                                        height: 0.0,
+                                      ),
+                                Icon(
+                                  icon,
+                                  key: ValueKey(icon.hashCode.toString()),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                })
           ],
         ),
       ),

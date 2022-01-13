@@ -23,7 +23,6 @@ class _RootState extends State<Root> {
   }
 
   void load() async {
-    bool internet = false;
     await tyckaData.preferences.getLanguage();
     tyckaData.preferences.useBiometric =
         await tyckaData.preferences.getBiometicSettings();
@@ -31,32 +30,9 @@ class _RootState extends State<Root> {
       MyApp.of(context)!.setLocale(Locale(tyckaData.preferences.language!));
     }
     await tyckaData.auth.checkIfAvailable();
-    while (!internet) {
-      var connectivityCheck = await (Connectivity().checkConnectivity());
-      if (connectivityCheck == ConnectivityResult.none) {
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.noInternet),
-                  content: Text(AppLocalizations.of(context)!.internetNeeded),
-                  actions: [
-                    TextButton(
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                          await Future.delayed(Duration(seconds: 1));
-                          load();
-                        },
-                        child: Text(AppLocalizations.of(context)!.tryAgain))
-                  ],
-                ));
-        return;
-      } else {
-        internet = true;
-      }
-    }
     await tyckaData.getLoginStatus();
     if (tyckaData.isLoggedIn == true) {
-      await tyckaData.getPersons();
+      tyckaData.getPersons();
 
       setState(() {
         status = IsLoggedIn.LOGGED_IN;

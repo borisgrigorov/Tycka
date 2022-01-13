@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:tycka/data/certsStatusBloc.dart';
 import 'package:tycka/data/consts.dart';
 import 'package:tycka/data/validation.dart';
 import 'package:tycka/models/certificate.dart';
@@ -28,6 +31,20 @@ class TyckaData {
   TyckaPreferences preferences = TyckaPreferences();
   CertValidationRules? validationRules;
   AuthStream authStream = AuthStream();
+
+  CertFetchStatus fetchStatus = CertFetchStatus();
+
+  StreamSubscription? _connectionSubscription;
+  TyckaData() {
+    _connectionSubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult connectivity) {
+      if (connectivity != ConnectivityResult.none) {
+        fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHING);
+        getPersons();
+      }
+    });
+  }
 
   Future<String> getJwt(String deviceName, String installationID) async {
     var response = await http.post(
@@ -54,23 +71,62 @@ class TyckaData {
   }
 
   Future<List<Person>> getPersons() async {
+    var connectivityCheck = await (Connectivity().checkConnectivity());
+    List<Person> cachedPeople = [];
+    String? cachedPersonsData = await preferences.getCachedPeople();
+    if (cachedPersonsData == null &&
+        connectivityCheck == ConnectivityResult.none) {
+      fetchStatus.setStatus(FETCH_STATUS.OFFLINE_FAILED);
+      return [];
+    }
+    cachedPeople = _decodePeople(cachedPersonsData ?? "[]");
+    for (Person x in cachedPeople) {
+      x.certificates = _decodeCerts(await preferences.getCerts(x.id) ?? "[]");
+    }
+    this.persons.setList(cachedPeople);
+
+    if (connectivityCheck == ConnectivityResult.none) {
+      fetchStatus.setStatus(FETCH_STATUS.OFFLINE);
+      return cachedPeople;
+    }
     String accessToken = await this.getAccessToken();
     var response = await http.get(
         Uri.parse('${TyckaConsts.BASE_UZIS_URL}${TyckaConsts.PERSON_ENDPOINT}'),
         headers: {"Authorization": "Bearer $accessToken"});
-    var data = json.decode(response.body);
+    if (response.statusCode != 200) {
+      //fetchStatus.setStatus(FETCH_STATUS.OFFLINE);
+      return cachedPeople;
+    }
+    List<Person> newPersons = _decodePeople(response.body);
+    await preferences.setCachedPeople(response.body);
+    for (Person x in newPersons) {
+      String certData = await getCertificates(x.id);
+      x.certificates = _decodeCerts(certData);
+      await preferences.saveCerts(x.id, certData);
+    }
+    persons.setList(newPersons);
+    fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHED);
+    return this.persons.state;
+  }
+
+  List<Person> _decodePeople(String text) {
+    var data = json.decode(text);
     List<Person> newPersons = [];
     for (final x in data) {
       Person person = Person.fromJson(x);
-      var certData = json.decode(await this.getCertificates(person.id));
-      for (final x in certData) {
-        Certificate c = Certificate.fromJson(x);
-        person.certificates.add(c);
-      }
       newPersons.add(person);
     }
-    persons.setList(newPersons);
-    return this.persons.state;
+    return newPersons;
+  }
+
+  List<Certificate> _decodeCerts(String text) {
+    List<Certificate> certs = [];
+    var certData = json.decode(text);
+    for (final x in certData) {
+      Certificate c = Certificate.fromJson(x);
+      certs.add(c);
+    }
+    return certs;
   }
 
   Future<String> getCertificates(personId) async {
