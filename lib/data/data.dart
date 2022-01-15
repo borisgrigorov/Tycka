@@ -35,14 +35,18 @@ class TyckaData {
   CertFetchStatus fetchStatus = CertFetchStatus();
 
   StreamSubscription? _connectionSubscription;
+  ConnectivityResult? _connectivityResult;
   TyckaData() {
     _connectionSubscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult connectivity) {
-      if (connectivity != ConnectivityResult.none) {
+        .listen((ConnectivityResult connectivity) async {
+      if (connectivity != ConnectivityResult.none &&
+          (_connectivityResult == ConnectivityResult.none ||
+              _connectivityResult == null)) {
         fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHING);
         getPersons();
       }
+      _connectivityResult = connectivity;
     });
   }
 
@@ -71,6 +75,7 @@ class TyckaData {
   }
 
   Future<List<Person>> getPersons() async {
+    fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHING);
     var connectivityCheck = await (Connectivity().checkConnectivity());
     List<Person> cachedPeople = [];
     String? cachedPersonsData = await preferences.getCachedPeople();
@@ -85,9 +90,20 @@ class TyckaData {
     }
     this.persons.setList(cachedPeople);
 
+    CertValidationRules? cachedRules = await getValidationRulesFromCache();
+    if (cachedRules != null) {
+      this.validationRules = cachedRules;
+      persons.setList(persons.state);
+    }
+
     if (connectivityCheck == ConnectivityResult.none) {
       fetchStatus.setStatus(FETCH_STATUS.OFFLINE);
       return cachedPeople;
+    }
+
+    CertValidationRules? rules = await getValidationRules();
+    if (rules != null) {
+      this.validationRules = rules;
     }
     String accessToken = await this.getAccessToken();
     var response = await http.get(
@@ -100,7 +116,15 @@ class TyckaData {
     List<Person> newPersons = _decodePeople(response.body);
     await preferences.setCachedPeople(response.body);
     for (Person x in newPersons) {
-      String certData = await getCertificates(x.id);
+      String? certData = await getCertificates(x.id);
+      if (certData == null) {
+        print('Cannot fetch certs!');
+        x.certificates = cachedPeople
+            .firstWhere((element) => element.id == x.id)
+            .certificates;
+        fetchStatus.setStatus(FETCH_STATUS.ONLINE_FAILED);
+        return cachedPeople;
+      }
       x.certificates = _decodeCerts(certData);
       await preferences.saveCerts(x.id, certData);
     }
@@ -129,15 +153,14 @@ class TyckaData {
     return certs;
   }
 
-  Future<String> getCertificates(personId) async {
+  Future<String?> getCertificates(personId) async {
     String accessToken = await this.getAccessToken();
     var response = await http.get(
         Uri.parse(
             '${TyckaConsts.BASE_UZIS_URL}${TyckaConsts.PERSON_ENDPOINT}/$personId/dgc'),
         headers: {"Authorization": "Bearer $accessToken"});
-    CertValidationRules? rules = await getValidationRules();
-    if (rules != null) {
-      this.validationRules = rules;
+    if (response.statusCode != 200) {
+      return null;
     }
     return response.body;
   }

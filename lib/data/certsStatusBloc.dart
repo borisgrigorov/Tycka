@@ -5,6 +5,7 @@ enum FETCH_STATUS {
   OFFLINE_FAILED,
   ONLINE_FETCHING,
   ONLINE_FETCHED,
+  ONLINE_FAILED
 }
 
 class CertFetchStatus extends Cubit<FETCH_STATUS> {

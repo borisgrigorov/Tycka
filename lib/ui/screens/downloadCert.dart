@@ -23,7 +23,6 @@ class _DownloadingCertState extends State<DownloadingCert> {
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 500), (timer) async {
       List? tasks = await FlutterDownloader.loadTasks();
-      print(widget.taskId);
       if (tasks != null && tasks.isNotEmpty) {
         _status =
             tasks.firstWhere((task) => task.taskId == widget.taskId)?.status;

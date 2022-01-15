@@ -55,4 +55,14 @@ class TyckaPreferences {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString("certs-" + uid);
   }
+
+  Future setValidationRules(String text) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("validationRules", text);
+  }
+
+  Future getValidationRules() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("validationRules");
+  }
 }

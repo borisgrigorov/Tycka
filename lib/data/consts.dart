@@ -8,6 +8,8 @@ abstract class TyckaConsts {
   static const String LANGUAGE_KEY = "language";
   static const String USE_BIOMETRIC_KEY = "useBiometric";
   static const String DOWNLOAD_PDF_URL = "OckovaciCertifikatPdfByCertikatCislo";
+  static const String VALIDATION_RULES_URL =
+      "https://dgcverify.mzcr.cz/api/v1/verify/NactiPravidlaPlatnostiDgc";
 }
 
 enum TyckaLoginTypes { NIA, SMS }

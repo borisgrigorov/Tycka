@@ -85,6 +85,8 @@ class _HomeState extends State<Home> {
   bool _isLoading = false;
 
   StreamSubscription? _newLogin;
+  StreamSubscription? _snackbarSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -94,11 +96,91 @@ class _HomeState extends State<Home> {
         _isLoading = false;
       });
     });
+    _snackbarSubscription = tyckaData.fetchStatus.stream
+        .listen((status) => showStatusSnackbar(status));
+    Future.delayed(
+        Duration.zero, () => showStatusSnackbar(tyckaData.fetchStatus.state));
+  }
+
+  void showStatusSnackbar(FETCH_STATUS status) {
+    String text = "";
+    IconData icon = Icons.download_rounded;
+    bool progress = true;
+    switch (status) {
+      case FETCH_STATUS.OFFLINE:
+        text = "Using offline data";
+        icon = Icons.cloud_off_rounded;
+        progress = false;
+        break;
+      case FETCH_STATUS.OFFLINE_FAILED:
+        text = "Cannot retreive offline data";
+        progress = false;
+        icon = Icons.error_rounded;
+        break;
+      case FETCH_STATUS.ONLINE_FAILED:
+        text = "Cannot retreive new certificates, using offline data";
+        progress = false;
+        icon = Icons.error_rounded;
+        break;
+      case FETCH_STATUS.ONLINE_FETCHED:
+        text = "Fetched newest certificates";
+        progress = false;
+        icon = Icons.done_rounded;
+        break;
+      case FETCH_STATUS.ONLINE_FETCHING:
+        text = "Fetching newest certificates";
+        progress = true;
+        icon = Icons.download_rounded;
+        break;
+    }
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: ThemeUtils.backgroundColor(context).withOpacity(0.8),
+      elevation: 8.0,
+      padding: EdgeInsets.all(15.0),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      content: Row(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              progress
+                  ? Container(
+                      height: 30.0,
+                      width: 30.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1.0,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 0.0,
+                    ),
+              Icon(
+                icon,
+                key: ValueKey(icon.hashCode.toString()),
+              )
+            ],
+          ),
+          SizedBox(width: 15.0),
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: ThemeUtils.isDark(context) ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 
   @override
   void dispose() {
     _newLogin?.cancel();
+    _snackbarSubscription?.cancel();
     super.dispose();
   }
 
@@ -163,11 +245,6 @@ class _HomeState extends State<Home> {
                     Expanded(
                       child: RefreshIndicator(
                         onRefresh: () {
-                          setState(() {
-                            _showBanner = true;
-                          });
-                          tyckaData.fetchStatus
-                              .setStatus(FETCH_STATUS.ONLINE_FETCHING);
                           tyckaData.getPersons();
                           return Future.value();
                         },
@@ -223,88 +300,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            overlay(),
             TyckaUI.loading(_isLoading),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Timer? _closeBanner;
-  bool _showBanner = true;
-  Widget overlay() {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            BlocBuilder<CertFetchStatus, FETCH_STATUS>(
-                bloc: tyckaData.fetchStatus,
-                builder: (context, data) {
-                  String text = "";
-                  IconData icon = Icons.download_rounded;
-                  bool progress = true;
-                  switch (data) {
-                    case FETCH_STATUS.OFFLINE:
-                      text = "Using offline data";
-                      icon = Icons.cloud_off_rounded;
-                      progress = false;
-                      break;
-                    case FETCH_STATUS.OFFLINE_FAILED:
-                      text = "Cannot retreive offline data";
-                      progress = false;
-                      icon = Icons.error_rounded;
-                      break;
-                    case FETCH_STATUS.ONLINE_FETCHED:
-                      text = "Fetched newest certificates";
-                      progress = false;
-                      icon = Icons.done_rounded;
-                      _closeBanner =
-                          Timer.periodic(Duration(seconds: 2), (timer) {
-                        setState(() {
-                          _showBanner = false;
-                        });
-                        _closeBanner?.cancel();
-                      });
-                      break;
-                    case FETCH_STATUS.ONLINE_FETCHING:
-                      text = "Fetching newest certificates";
-                      progress = true;
-                      icon = Icons.download_rounded;
-                      break;
-                  }
-                  return !_showBanner
-                      ? SizedBox()
-                      : Container(
-                          decoration: BoxDecoration(
-                              color: ThemeUtils.backgroundColor(context)
-                                  .withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(20.0)),
-                          child: ListTile(
-                            title: Text(text),
-                            leading: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                progress
-                                    ? CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                      )
-                                    : SizedBox(
-                                        height: 0.0,
-                                      ),
-                                Icon(
-                                  icon,
-                                  key: ValueKey(icon.hashCode.toString()),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                })
           ],
         ),
       ),
