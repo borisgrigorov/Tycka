@@ -98,8 +98,8 @@ class _HomeState extends State<Home> {
     });
     _snackbarSubscription = tyckaData.fetchStatus.stream
         .listen((status) => showStatusSnackbar(status));
-    Future.delayed(
-        Duration.zero, () => showStatusSnackbar(tyckaData.fetchStatus.state));
+    Future.delayed(Duration(seconds: 1),
+        () => showStatusSnackbar(tyckaData.fetchStatus.state));
   }
 
   void showStatusSnackbar(FETCH_STATUS status) {
@@ -108,27 +108,27 @@ class _HomeState extends State<Home> {
     bool progress = true;
     switch (status) {
       case FETCH_STATUS.OFFLINE:
-        text = "Using offline data";
+        text = AppLocalizations.of(context)!.usingOfflineData;
         icon = Icons.cloud_off_rounded;
         progress = false;
         break;
       case FETCH_STATUS.OFFLINE_FAILED:
-        text = "Cannot retreive offline data";
+        text = AppLocalizations.of(context)!.cannotUseOfflinedata;
         progress = false;
         icon = Icons.error_rounded;
         break;
       case FETCH_STATUS.ONLINE_FAILED:
-        text = "Cannot retreive new certificates, using offline data";
+        text = AppLocalizations.of(context)!.cannotRetrieveCert;
         progress = false;
         icon = Icons.error_rounded;
         break;
       case FETCH_STATUS.ONLINE_FETCHED:
-        text = "Fetched newest certificates";
+        text = AppLocalizations.of(context)!.fetchedNewestCert;
         progress = false;
         icon = Icons.done_rounded;
         break;
       case FETCH_STATUS.ONLINE_FETCHING:
-        text = "Fetching newest certificates";
+        text = AppLocalizations.of(context)!.fetchingNewestCerts;
         progress = true;
         icon = Icons.download_rounded;
         break;

@@ -67,5 +67,10 @@
     "showName": "Zobrazit jméno",
     "showBirthday": "Zobrazit datum narození",
     "export": "Exportovat",
-    "exported": "Exportováno"
+    "exported": "Exportováno",
+    "usingOfflineData": "Offline režim",
+    "cannotUseOfflinedata": "Nelze získa offline data",
+    "cannotRetrieveCert": "Nelze získat certifikáty, použity offline data",
+    "fetchedNewestCert": "Nejnovější certifikáty staženy",
+    "fetchingNewestCerts": "Stahování novějších certifikátů"
 }

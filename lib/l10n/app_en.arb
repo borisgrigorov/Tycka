@@ -67,5 +67,11 @@
     "showName": "Show name",
     "showBirthday": "Show birthday",
     "export": "Export",
-    "exported": "Exported"
+    "exported": "Exported",
+    "usingOfflineData": "Using offline data",
+    "cannotUseOfflinedata": "Cannot retreive offline data",
+    "cannotRetrieveCert": "Cannot retreive new certificates, using offline data",
+    "fetchedNewestCert": "Fetched newest certificates",
+    "fetchingNewestCerts": "Fetching newest certificates"
+
 }
