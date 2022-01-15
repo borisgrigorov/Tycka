@@ -35,18 +35,18 @@ class TyckaData {
   CertFetchStatus fetchStatus = CertFetchStatus();
 
   StreamSubscription? _connectionSubscription;
-  ConnectivityResult? _connectivityResult;
+  ConnectivityResult? connectivityResult;
   TyckaData() {
     _connectionSubscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult connectivity) async {
       if (connectivity != ConnectivityResult.none &&
-          (_connectivityResult == ConnectivityResult.none ||
-              _connectivityResult == null)) {
+          (connectivityResult == ConnectivityResult.none ||
+              connectivityResult == null)) {
         fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHING);
         getPersons();
       }
-      _connectivityResult = connectivity;
+      connectivityResult = connectivity;
     });
   }
 
@@ -221,6 +221,7 @@ class TyckaData {
       return false;
     }
     persons.removePersonById(personId);
+    await preferences.removeCachedPerson(personId);
     return true;
   }
 

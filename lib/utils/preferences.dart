@@ -46,6 +46,11 @@ class TyckaPreferences {
     return prefs.getString("people");
   }
 
+  Future removeCachedPerson(String uid) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove("certs-" + uid);
+  }
+
   Future saveCerts(String uid, String text) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("certs-" + uid, text);

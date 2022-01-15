@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tycka/data/consts.dart';
@@ -100,6 +101,15 @@ class _PersonSettingsState extends State<PersonsSettings> {
                               TyckaUI.button(context,
                                   color: TyckaUI.red,
                                   elevation: 0.0, onPressed: () async {
+                                if (tyckaData.connectivityResult ==
+                                    ConnectivityResult.none) {
+                                  TyckaDialog.show(
+                                    context,
+                                    AppLocalizations.of(context)!.noInternet,
+                                    "",
+                                  );
+                                  return;
+                                }
                                 await tyckaData.removePerson(data[index].id);
                                 Navigator.of(context).pop();
                               }, text: AppLocalizations.of(context)!.remove),
