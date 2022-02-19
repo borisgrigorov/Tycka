@@ -127,6 +127,8 @@ class TyckaData {
       }
       x.certificates = _decodeCerts(certData);
       await preferences.saveCerts(x.id, certData);
+      await preferences
+          .setCertsDonwloaded(DateTime.now().millisecondsSinceEpoch);
     }
     persons.setList(newPersons);
     fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHED);

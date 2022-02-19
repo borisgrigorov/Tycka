@@ -72,6 +72,7 @@
     "cannotUseOfflinedata": "Cannot retreive offline data",
     "cannotRetrieveCert": "Cannot retreive new certificates, using offline data",
     "fetchedNewestCert": "Fetched newest certificates",
-    "fetchingNewestCerts": "Fetching newest certificates"
-
+    "fetchingNewestCerts": "Fetching newest certificates",
+    "rulesDownloaded": "Validation rules downloaded at",
+    "certsDownloaded": "Certificates downloaded at"
 }

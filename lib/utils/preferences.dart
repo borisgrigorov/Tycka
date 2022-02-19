@@ -64,4 +64,30 @@ class TyckaPreferences {
   String? getValidationRules() {
     return box.get("validationRules");
   }
+
+  Future setValidationRulesDownloadDate(int timestamp) async {
+    await box.put("validationRulesDownloadDate", timestamp);
+  }
+
+  DateTime? getValidationRulesDownloadDate() {
+    int? timestamp = box.get("validationRulesDownloadDate");
+    if (timestamp == null) {
+      return null;
+    } else {
+      return DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+    }
+  }
+
+  Future setCertsDonwloaded(int timestamp) async {
+    await box.put("certsDownloaded", timestamp);
+  }
+
+  DateTime? getCertsDownloaded() {
+    int? timestamp = box.get("certsDownloaded");
+    if (timestamp == null) {
+      return null;
+    } else {
+      return DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+    }
+  }
 }

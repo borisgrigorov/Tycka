@@ -8,6 +8,7 @@ import 'package:tycka/ui/screens/persons.dart';
 import 'package:tycka/ui/themes.dart';
 import 'package:tycka/utils/themeUtils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tycka/utils/timeUtils.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.logout}) : super(key: key);
@@ -95,6 +96,20 @@ class _SettingsState extends State<Settings> {
                             MaterialPageRoute(
                                 builder: (context) => AboutApp())),
                       ),
+                      Text(
+                        AppLocalizations.of(context)!.rulesDownloaded +
+                            " " +
+                            TimeUtils.getBetterDate(tyckaData.preferences
+                                .getValidationRulesDownloadDate()),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.certsDownloaded +
+                            " " +
+                            TimeUtils.getBetterDate(
+                                tyckaData.preferences.getCertsDownloaded()),
+                        style: TextStyle(color: Colors.grey),
+                      )
                     ],
                   )),
             ),

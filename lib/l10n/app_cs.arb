@@ -72,5 +72,7 @@
     "cannotUseOfflinedata": "Nelze získa offline data",
     "cannotRetrieveCert": "Nelze získat certifikáty, použity offline data",
     "fetchedNewestCert": "Nejnovější certifikáty staženy",
-    "fetchingNewestCerts": "Stahování novějších certifikátů"
+    "fetchingNewestCerts": "Stahování novějších certifikátů",
+    "rulesDownloaded": "Validační pravidla staženy",
+    "certsDownloaded": "Certifikáty staženy"
 }

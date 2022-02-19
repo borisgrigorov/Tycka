@@ -16,7 +16,8 @@ Future<CertValidationRules?> getValidationRules() async {
   final data = json.decode(response.body)?["pravidla"]?[0];
   if (data != null) {
     await tyckaData.preferences.setValidationRules(response.body);
-
+    await tyckaData.preferences
+        .setValidationRulesDownloadDate(DateTime.now().millisecondsSinceEpoch);
     return CertValidationRules.fromJson(data);
   }
   return null;
