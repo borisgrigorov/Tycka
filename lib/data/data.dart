@@ -44,7 +44,7 @@ class TyckaData {
           (connectivityResult == ConnectivityResult.none ||
               connectivityResult == null)) {
         fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHING);
-        getPersons();
+        preferences.init().then((_) => getPersons());
       }
       connectivityResult = connectivity;
     });
@@ -78,7 +78,7 @@ class TyckaData {
     fetchStatus.setStatus(FETCH_STATUS.ONLINE_FETCHING);
     var connectivityCheck = await (Connectivity().checkConnectivity());
     List<Person> cachedPeople = [];
-    String? cachedPersonsData = await preferences.getCachedPeople();
+    String? cachedPersonsData = preferences.getCachedPeople();
     if (cachedPersonsData == null &&
         connectivityCheck == ConnectivityResult.none) {
       fetchStatus.setStatus(FETCH_STATUS.OFFLINE_FAILED);
@@ -86,7 +86,7 @@ class TyckaData {
     }
     cachedPeople = _decodePeople(cachedPersonsData ?? "[]");
     for (Person x in cachedPeople) {
-      x.certificates = _decodeCerts(await preferences.getCerts(x.id) ?? "[]");
+      x.certificates = _decodeCerts(preferences.getCerts(x.id) ?? "[]");
     }
     this.persons.setList(cachedPeople);
 

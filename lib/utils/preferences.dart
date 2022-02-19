@@ -1,73 +1,67 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tycka/data/consts.dart';
 
 class TyckaPreferences {
   bool? useBiometric;
   String? language;
+  late Box box;
+
+  Future init() async {
+    await Hive.initFlutter();
+    box = await Hive.openBox("tyckaData");
+  }
 
   Future<String?> getLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    language = prefs.getString(TyckaConsts.LANGUAGE_KEY) ?? null;
+    language = box.get(TyckaConsts.LANGUAGE_KEY);
     return language;
   }
 
   Future setLanguge(String lang) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(TyckaConsts.LANGUAGE_KEY, lang);
+    await box.put(TyckaConsts.LANGUAGE_KEY, lang);
     return;
   }
 
   Future resetLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(TyckaConsts.LANGUAGE_KEY);
+    await box.delete(TyckaConsts.LANGUAGE_KEY);
     return;
   }
 
-  Future<bool> getBiometicSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    useBiometric = prefs.getBool(TyckaConsts.USE_BIOMETRIC_KEY) ?? false;
+  bool getBiometicSettings() {
+    useBiometric = box.get(TyckaConsts.USE_BIOMETRIC_KEY) ?? false;
     return useBiometric ?? false;
   }
 
   Future setBiometric(bool use) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(TyckaConsts.USE_BIOMETRIC_KEY, use);
+    await box.put(TyckaConsts.USE_BIOMETRIC_KEY, use);
     useBiometric = use;
     return;
   }
 
   Future setCachedPeople(String data) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("people", data);
+    await box.put("people", data);
   }
 
-  Future<String?> getCachedPeople() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("people");
+  String? getCachedPeople() {
+    return box.get("people");
   }
 
   Future removeCachedPerson(String uid) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("certs-" + uid);
+    await box.delete("certs-" + uid);
   }
 
   Future saveCerts(String uid, String text) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("certs-" + uid, text);
+    await box.put("certs-" + uid, text);
   }
 
-  Future<String?> getCerts(String uid) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("certs-" + uid);
+  String? getCerts(String uid) {
+    return box.get("certs-" + uid);
   }
 
   Future setValidationRules(String text) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("validationRules", text);
+    await box.put("validationRules", text);
   }
 
-  Future getValidationRules() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("validationRules");
+  String? getValidationRules() {
+    return box.get("validationRules");
   }
 }

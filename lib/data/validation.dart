@@ -23,7 +23,7 @@ Future<CertValidationRules?> getValidationRules() async {
 }
 
 Future<CertValidationRules?> getValidationRulesFromCache() async {
-  String? text = await tyckaData.preferences.getValidationRules();
+  String? text = tyckaData.preferences.getValidationRules();
 
   if (text == null) {
     return null;

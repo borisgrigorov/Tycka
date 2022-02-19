@@ -21,9 +21,10 @@ class _RootState extends State<Root> {
   }
 
   void load() async {
+    await tyckaData.preferences.init();
     await tyckaData.preferences.getLanguage();
     tyckaData.preferences.useBiometric =
-        await tyckaData.preferences.getBiometicSettings();
+        tyckaData.preferences.getBiometicSettings();
     if (tyckaData.preferences.language != null) {
       MyApp.of(context)!.setLocale(Locale(tyckaData.preferences.language!));
     }
