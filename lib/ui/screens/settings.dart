@@ -24,7 +24,6 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.settings),
         iconTheme: IconThemeData(color: Colors.white),
-        brightness: Brightness.dark,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
       ),
@@ -62,7 +61,7 @@ class _SettingsState extends State<Settings> {
                             borderRadius: BorderRadius.circular(15.0)),
                         title: Text(AppLocalizations.of(context)!.darkTheme),
                         trailing: Switch(
-                          activeColor: Theme.of(context).accentColor,
+                          activeColor: TyckaUI.secondaryColor,
                           value:
                               Theme.of(context).brightness == Brightness.dark,
                           onChanged: (value) => _setDarkTheme(context),

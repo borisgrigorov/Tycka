@@ -34,7 +34,6 @@ class _PersonSettingsState extends State<PersonsSettings> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.persons),
         iconTheme: IconThemeData(color: Colors.white),
-        brightness: Brightness.dark,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),

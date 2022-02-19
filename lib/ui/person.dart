@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:morpheus/morpheus.dart';
 import 'package:tycka/data/certUtils.dart';
 import 'package:tycka/models/person.dart';
@@ -29,7 +28,6 @@ class _PersonOverviewState extends State<PersonOverview> {
       appBar: AppBar(
         title: Text(person.getName()),
         iconTheme: IconThemeData(color: Colors.white),
-        brightness: Brightness.dark,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
       ),

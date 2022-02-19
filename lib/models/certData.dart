@@ -111,6 +111,8 @@ class VaccinationCert extends CertificateData {
           difference >=
               vaccineValidity[0].twoDoseVaccineFirstDoseValidFromDays) {
         return true;
+      } else if (doses == totalDoses && totalDoses == 3) {
+        return true;
       } else {
         return false;
       }

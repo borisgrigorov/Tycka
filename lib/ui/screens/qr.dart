@@ -24,7 +24,6 @@ class _QRCodeState extends State<QRCode> {
         appBar: AppBar(
           title: Text(widget.certificate.data.getCertificateType(context)),
           iconTheme: IconThemeData(color: Colors.white),
-          brightness: Brightness.dark,
           elevation: 0.0,
           backgroundColor: Colors.transparent,
           actions: [

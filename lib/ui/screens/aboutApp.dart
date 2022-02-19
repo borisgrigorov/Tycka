@@ -18,7 +18,6 @@ class AboutApp extends StatelessWidget {
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
             color: ThemeUtils.isDark(context) ? Colors.white : Colors.black),
-        brightness: Brightness.dark,
         elevation: 0.0,
       ),
       backgroundColor: ThemeUtils.backgroundColor(context),
